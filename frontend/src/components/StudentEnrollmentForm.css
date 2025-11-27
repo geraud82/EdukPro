@@ -1,0 +1,587 @@
+.enrollment-form-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.enrollment-form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 0;
+}
+
+.enrollment-form-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.enrollment-form {
+  background: white;
+  border-radius: 10px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.enrollment-form-content {
+  background: white;
+}
+
+/* Progress Steps */
+.steps-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px;
+  background: #f8f9fa;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-radius: 10px 10px 0 0;
+}
+
+.step {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: all 0.3s;
+  z-index: 1;
+}
+
+.step.active .step-number {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.step.completed .step-number {
+  background: #4caf50;
+  color: white;
+}
+
+.step-title {
+  font-size: 0.75rem;
+  text-align: center;
+  color: #666;
+  font-weight: 500;
+}
+
+.step.active .step-title {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.step.completed .step-title {
+  color: #4caf50;
+}
+
+/* Form Steps */
+.form-step {
+  padding: 30px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-step h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 1.25rem;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 10px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-group small {
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 5px;
+}
+
+/* Documents List */
+.documents-list {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.documents-list h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.document-item {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.document-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.document-name {
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+  word-break: break-word;
+}
+
+.document-size {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.document-details {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.doc-type-select,
+.doc-description {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.doc-type-select {
+  min-width: 150px;
+}
+
+.doc-description {
+  flex: 1;
+  min-width: 200px;
+}
+
+.remove-doc-btn {
+  padding: 6px 12px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.3s;
+}
+
+.remove-doc-btn:hover {
+  background: #d32f2f;
+}
+
+/* Form Navigation */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background: #f8f9fa;
+  border-radius: 0 0 10px 10px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.nav-spacer {
+  flex: 1;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-success {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background: #d0d0d0;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.btn-success:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Scrollbar Styling */
+.enrollment-form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.enrollment-form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.enrollment-form::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.enrollment-form::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .enrollment-form-container {
+    padding: 5px;
+    align-items: flex-start;
+  }
+
+  .enrollment-form {
+    max-width: 100%;
+    max-height: 98vh;
+    margin: 0;
+    border-radius: 8px;
+  }
+
+  .enrollment-form-header {
+    padding: 12px 15px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .enrollment-form-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .close-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 1.5rem;
+  }
+
+  .steps-container {
+    padding: 12px 10px;
+    gap: 3px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .step {
+    min-width: 70px;
+    flex-shrink: 0;
+  }
+
+  .step-number {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .step-title {
+    font-size: 0.6rem;
+    line-height: 1.2;
+  }
+
+  .form-step {
+    padding: 15px;
+  }
+
+  .form-step h3 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+
+  .form-row {
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 10px;
+    font-size: 0.9rem;
+    /* Prevent zoom on iOS */
+    font-size: 16px;
+  }
+
+  .form-group textarea {
+    min-height: 80px;
+  }
+
+  .form-navigation {
+    padding: 12px 15px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-success {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    flex: 1;
+    min-width: 100px;
+    /* Better touch target */
+    min-height: 44px;
+  }
+
+  .nav-spacer {
+    display: none;
+  }
+
+  .document-item {
+    padding: 12px;
+  }
+
+  .document-details {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .doc-type-select,
+  .doc-description {
+    width: 100%;
+    min-width: auto;
+    font-size: 0.85rem;
+  }
+
+  .remove-doc-btn {
+    width: 100%;
+    padding: 8px 12px;
+  }
+
+  .documents-list {
+    padding: 12px;
+  }
+
+  .documents-list h4 {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+}
+
+/* Extra small devices (phones in portrait, less than 400px) */
+@media (max-width: 400px) {
+  .enrollment-form-container {
+    padding: 0;
+  }
+
+  .enrollment-form {
+    border-radius: 0;
+    max-height: 100vh;
+  }
+
+  .enrollment-form-header {
+    border-radius: 0;
+    padding: 10px 12px;
+  }
+
+  .enrollment-form-header h2 {
+    font-size: 1rem;
+  }
+
+  .steps-container {
+    padding: 10px 8px;
+  }
+
+  .step {
+    min-width: 60px;
+  }
+
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+
+  .step-title {
+    font-size: 0.55rem;
+  }
+
+  .form-step {
+    padding: 12px;
+  }
+
+  .form-step h3 {
+    font-size: 0.95rem;
+  }
+
+  .form-navigation {
+    padding: 10px 12px;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-success {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .enrollment-form-container {
+    padding: 5px;
+  }
+
+  .enrollment-form {
+    max-height: 98vh;
+  }
+
+  .steps-container {
+    padding: 8px 10px;
+  }
+
+  .form-step {
+    padding: 12px 15px;
+  }
+
+  .form-navigation {
+    padding: 10px 15px;
+  }
+}

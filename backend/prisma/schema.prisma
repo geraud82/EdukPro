@@ -1,0 +1,295 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  parent
+  teacher
+  admin
+  owner
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum PaymentStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model School {
+  id        Int      @id @default(autoincrement())
+  name      String
+  address   String?
+  city      String?
+  state     String?
+  country   String?
+  postalCode String?
+  phone     String?
+  email     String?
+  website   String?
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users    User[]
+  students Student[]
+  classes  Class[]
+  fees     Fee[]
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(parent)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // NEW: school (null for global owners)
+  schoolId Int?
+  school   School? @relation(fields: [schoolId], references: [id])
+
+  // Parent ↔ children
+  children Student[]
+
+  // Teacher ↔ classes
+  teacherClasses Class[] @relation("TeacherClasses")
+
+  // Chat relations
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  
+  // Notifications
+  notifications Notification[]
+}
+
+model Student {
+  id          Int       @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime?
+  
+  // Personal Information
+  gender      String?
+  nationality String?
+  bloodGroup  String?
+  
+  // Contact Information
+  address     String?
+  city        String?
+  state       String?
+  postalCode  String?
+  phone       String?
+  email       String?
+  
+  // Guardian/Emergency Contact
+  guardianName        String?
+  guardianRelation    String?
+  guardianPhone       String?
+  guardianEmail       String?
+  guardianAddress     String?
+  
+  // Emergency Contact
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  emergencyContactRelation String?
+  
+  // Medical Information
+  allergies            String?
+  medicalConditions    String?
+  medications          String?
+  doctorName           String?
+  doctorPhone          String?
+  
+  // Previous School Information
+  previousSchool       String?
+  previousGrade        String?
+  transferReason       String?
+  
+  // Additional Notes
+  specialNeeds         String?
+  notes                String?
+
+  parent   User @relation(fields: [parentId], references: [id])
+  parentId Int
+
+  // NEW: school
+  schoolId Int?
+  school   School? @relation(fields: [schoolId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoices    Invoice[]
+  enrollments Enrollment[]
+  documents   StudentDocument[]
+
+  @@index([parentId])
+  @@index([schoolId])
+}
+
+model StudentDocument {
+  id          Int      @id @default(autoincrement())
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId   Int
+  
+  documentType String  // e.g., "birth_certificate", "id_card", "medical_record", "photo", "transcript"
+  fileName     String
+  fileUrl      String
+  fileSize     Int?
+  mimeType     String?
+  
+  uploadedBy   Int     // User ID who uploaded
+  description  String?
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([documentType])
+}
+
+model Fee {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  amount      Int
+  currency    String   @default("XOF")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // NEW: school
+  schoolId Int
+  school   School @relation(fields: [schoolId], references: [id])
+
+  invoices          Invoice[]
+  enrollmentClasses Class[]   @relation("EnrollmentFee")
+  tuitionClasses    Class[]   @relation("TuitionFee")
+
+  @@index([schoolId])
+}
+
+model Class {
+  id              Int     @id @default(autoincrement())
+  name            String
+  description     String?
+  level           String?
+  enrollmentFeeId Int?
+  tuitionFeeId    Int?
+
+  // NEW: school
+  schoolId Int
+  school   School @relation(fields: [schoolId], references: [id])
+
+  // Teacher assignment
+  teacherId Int?
+  teacher   User? @relation("TeacherClasses", fields: [teacherId], references: [id])
+
+  enrollmentFee Fee? @relation("EnrollmentFee", fields: [enrollmentFeeId], references: [id])
+  tuitionFee    Fee? @relation("TuitionFee", fields: [tuitionFeeId], references: [id])
+
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([enrollmentFeeId])
+  @@index([tuitionFeeId])
+  @@index([schoolId])
+  @@index([teacherId])
+}
+
+
+model Enrollment {
+  id         Int              @id @default(autoincrement())
+  student    Student          @relation(fields: [studentId], references: [id])
+  studentId  Int
+  class      Class            @relation(fields: [classId], references: [id])
+  classId    Int
+  status     EnrollmentStatus @default(PENDING)
+  createdAt  DateTime         @default(now())
+  approvedAt DateTime?
+
+  @@unique([studentId, classId]) // prevent duplicate enrollments
+  @@index([classId])
+}
+
+model Invoice {
+  id        Int           @id @default(autoincrement())
+  student   Student       @relation(fields: [studentId], references: [id])
+  studentId Int
+  fee       Fee           @relation(fields: [feeId], references: [id])
+  feeId     Int
+  amount    Int
+  status    InvoiceStatus @default(PENDING)
+  dueDate   DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  payments Payment[]
+
+  @@index([studentId])
+  @@index([feeId])
+  @@index([status])
+}
+
+model Payment {
+  id             Int           @id @default(autoincrement())
+  invoice        Invoice       @relation(fields: [invoiceId], references: [id])
+  invoiceId      Int
+  amount         Int
+  method         String?
+  status         PaymentStatus @default(SUCCESS)
+  transactionRef String?
+  createdAt      DateTime      @default(now())
+
+  @@index([invoiceId])
+  @@index([status])
+}
+
+model Message {
+  id         Int       @id @default(autoincrement())
+  content    String
+  sender     User      @relation("SentMessages", fields: [senderId], references: [id])
+  senderId   Int
+  receiver   User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId Int
+  createdAt  DateTime  @default(now())
+  readAt     DateTime?
+
+  @@index([senderId])
+  @@index([receiverId])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  type        String   // 'invoice', 'enrollment', 'payment', 'general'
+  title       String
+  message     String
+  relatedId   Int?     // ID of related entity (invoice, enrollment, etc.)
+  relatedType String?  // Type of related entity
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+}
