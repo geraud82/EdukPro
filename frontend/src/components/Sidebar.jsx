@@ -9,15 +9,17 @@ function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs 
   // Check if device is mobile
   const isMobile = () => window.innerWidth <= 768;
   
-  // Start collapsed on mobile devices (true = collapsed/hidden on mobile)
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  // Start open on desktop, collapsed on mobile
+  const [isCollapsed, setIsCollapsed] = useState(isMobile());
 
   // Initialize collapsed state based on screen size
   useEffect(() => {
     const handleResize = () => {
-      // On mobile, keep it collapsed by default
+      // On mobile, collapse by default; on desktop, expand by default
       if (isMobile()) {
         setIsCollapsed(true);
+      } else {
+        setIsCollapsed(false);
       }
     };
 

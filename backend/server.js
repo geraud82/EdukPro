@@ -59,9 +59,27 @@ const upload = multer({
 
 // Middleware
 app.use(express.json());
+
+// CORS configuration for production and development
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: 'http://localhost:5173', // frontend origin
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true
   })
 );
 
@@ -2337,7 +2355,17 @@ const server = http.createServer(app);
 
 io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // or 'http://localhost:5174' if you use that
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
     methods: ['GET', 'POST'],
   },
 });

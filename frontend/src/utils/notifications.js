@@ -1,4 +1,5 @@
 // Push Notification Utilities
+import { API_URL } from '../config';
 
 /**
  * Request notification permission from the user
@@ -55,7 +56,7 @@ export async function subscribeToPushNotifications() {
       // Fetch VAPID public key from backend
       let vapidPublicKey;
       try {
-        const response = await fetch('http://localhost:4000/api/push/vapid-public-key');
+        const response = await fetch(`${API_URL}/api/push/vapid-public-key`);
         const data = await response.json();
         vapidPublicKey = data.publicKey;
       } catch (error) {
@@ -97,7 +98,7 @@ export async function sendSubscriptionToBackend(subscription) {
       return false;
     }
 
-    const response = await fetch('http://localhost:4000/api/push/subscribe', {
+    const response = await fetch(`${API_URL}/api/push/subscribe`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
