@@ -19,10 +19,209 @@ function App() {
           <Route path="/teacher/*" element={<TeacherLayout />} />
           <Route path="/admin/*" element={<AdminLayout />} />
           <Route path="/owner/*" element={<OwnerLayout />} />
-
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </BrowserRouter>
+  );
+}
+
+/* ======================= 404 NOT FOUND PAGE ======================= */
+
+function NotFoundPage() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="page">
+      <div style={{ 
+        textAlign: 'center', 
+        marginTop: '4rem',
+        animation: 'fadeIn 0.5s ease-in'
+      }}>
+        <div style={{ 
+          fontSize: '8rem', 
+          marginBottom: '1rem',
+          filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
+          lineHeight: 1
+        }}>
+          🎓
+        </div>
+        
+        <div style={{
+          fontSize: '6rem',
+          fontWeight: 'bold',
+          background: 'linear-gradient(135deg, var(--primary-color), var(--primary-dark))',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '1rem',
+          lineHeight: 1
+        }}>
+          404
+        </div>
+
+        <h1 className="title" style={{ 
+          fontSize: '2.5rem', 
+          marginBottom: '1rem',
+          color: '#ffffff',
+          textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+        }}>
+          Page Not Found
+        </h1>
+        
+        <p className="subtitle" style={{ 
+          fontSize: '1.2rem', 
+          color: 'rgba(255, 255, 255, 0.95)',
+          marginBottom: '2rem',
+          maxWidth: '500px',
+          margin: '0 auto 2rem auto'
+        }}>
+          Oops! The page you're looking for doesn't exist or has been moved.
+        </p>
+      </div>
+
+      <div className="card" style={{ 
+        boxShadow: 'var(--shadow-xl)',
+        textAlign: 'center',
+        padding: '2rem'
+      }}>
+        <div style={{ 
+          fontSize: '3rem', 
+          marginBottom: '1.5rem',
+          filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'
+        }}>
+          🧭
+        </div>
+        
+        <h3 style={{ 
+          fontSize: '1.5rem', 
+          marginBottom: '1rem',
+          color: 'var(--text-primary)'
+        }}>
+          Let's get you back on track
+        </h3>
+        
+        <p style={{ 
+          fontSize: '1rem', 
+          color: 'var(--text-secondary)', 
+          marginBottom: '2rem',
+          lineHeight: 1.6
+        }}>
+          The page you're trying to reach might have been removed, renamed, or is temporarily unavailable.
+        </p>
+
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '1rem',
+          maxWidth: '400px',
+          margin: '0 auto'
+        }}>
+          <button 
+            className="btn" 
+            onClick={() => navigate(-1)}
+            style={{ 
+              padding: '1rem 2rem', 
+              fontSize: '1.1rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem'
+            }}
+          >
+            ← Go Back
+          </button>
+          
+          <button 
+            className="btn" 
+            onClick={() => navigate('/login')}
+            style={{ 
+              padding: '1rem 2rem', 
+              fontSize: '1.1rem',
+              backgroundColor: '#10b981',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem'
+            }}
+          >
+            🏠 Go to Home
+          </button>
+        </div>
+
+        <div style={{
+          marginTop: '2rem',
+          paddingTop: '2rem',
+          borderTop: '1px solid var(--border-color)'
+        }}>
+          <p style={{ 
+            fontSize: '0.9rem', 
+            color: 'var(--text-secondary)',
+            marginBottom: '1rem'
+          }}>
+            Need help? Here are some quick links:
+          </p>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: '0.75rem',
+            maxWidth: '500px',
+            margin: '0 auto'
+          }}>
+            <button
+              onClick={() => navigate('/login')}
+              style={{
+                padding: '0.75rem',
+                border: '2px solid var(--border-color)',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--bg-secondary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                color: 'var(--text-primary)'
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'var(--primary-color)';
+                e.currentTarget.style.background = 'white';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+                e.currentTarget.style.background = 'var(--bg-secondary)';
+              }}
+            >
+              🔐 Login
+            </button>
+            
+            <button
+              onClick={() => navigate('/signup')}
+              style={{
+                padding: '0.75rem',
+                border: '2px solid var(--border-color)',
+                borderRadius: 'var(--radius-md)',
+                background: 'var(--bg-secondary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                fontSize: '0.9rem',
+                fontWeight: '500',
+                color: 'var(--text-primary)'
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'var(--primary-color)';
+                e.currentTarget.style.background = 'white';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+                e.currentTarget.style.background = 'var(--bg-secondary)';
+              }}
+            >
+              ✨ Sign Up
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
