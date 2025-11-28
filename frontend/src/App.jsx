@@ -4143,12 +4143,11 @@ function AdminLayout() {
                 name: formData.get('name'),
                 email: formData.get('email'),
                 password: formData.get('password'),
-                role: 'teacher'
               };
 
               try {
                 const token = localStorage.getItem('token');
-                const res = await fetch('http://localhost:4000/api/auth/register', {
+                const res = await fetch('http://localhost:4000/api/admin/teachers', {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',

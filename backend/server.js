@@ -606,6 +606,66 @@ app.get('/api/admin/teachers', authMiddleware, async (req, res) => {
   }
 });
 
+// Admin: create a teacher
+app.post('/api/admin/teachers', authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only admins can create teachers' });
+    }
+
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Name, email, and password are required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    // Get admin's current schoolId from database
+    const admin = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: { schoolId: true },
+    });
+
+    if (!admin.schoolId) {
+      return res.status(400).json({ message: 'You must set up your school before creating teachers' });
+    }
+
+    // Check if email already exists
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return res.status(409).json({ message: 'Email already registered' });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const teacher = await prisma.user.create({
+      data: {
+        name,
+        email,
+        passwordHash,
+        role: 'teacher',
+        schoolId: admin.schoolId,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        isActive: true,
+        schoolId: true,
+      },
+    });
+
+    res.status(201).json(teacher);
+  } catch (err) {
+    console.error('Admin create teacher error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Admin: list all invoices (with student & fee)
 app.get('/api/admin/invoices', authMiddleware, async (req, res) => {
   try {
