@@ -332,9 +332,17 @@ function SignUpPage() {
             }}
           >
             <option value="parent">Parent</option>
-            <option value="teacher">Teacher</option>
             <option value="admin">School Admin</option>
           </select>
+          <p style={{ 
+            fontSize: '0.8rem', 
+            color: '#6b7280', 
+            marginTop: '-0.5rem',
+            marginBottom: '1rem',
+            fontStyle: 'italic'
+          }}>
+            ℹ️ Note: Teachers are added by school administrators and assigned to classes
+          </p>
 
           <label style={{ marginBottom: '0.5rem', display: 'block', fontWeight: '600' }}>
             Password
@@ -448,6 +456,7 @@ function SignUpPage() {
 
 function OwnerLayout() {
   const [me, setMe] = useState(null);
+  const [tab, setTab] = useState('dashboard'); // 'dashboard' | 'schools' | 'users' | 'analytics'
   const [users, setUsers] = useState([]);
   const [schools, setSchools] = useState([]);
   const [search, setSearch] = useState('');
@@ -460,15 +469,17 @@ function OwnerLayout() {
     email: '',
     role: 'parent',
     password: '',
-    schoolId: '',     // NEW
+    schoolId: '',
   });
 
-  const [newSchool, setNewSchool] = useState({
-    name: '',
-    address: '',
-    country: '',
-  });
-
+  // Sidebar tabs configuration
+  const ownerTabs = [
+    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { id: 'schools', label: 'Schools', icon: '🏫' },
+    { id: 'users', label: 'Users', icon: '👥' },
+    { id: 'analytics', label: 'Analytics', icon: '📈' },
+    { id: 'profile', label: 'Profile', icon: '👤' },
+  ];
 
   // Load current user from localStorage
   useEffect(() => {
@@ -478,6 +489,24 @@ function OwnerLayout() {
     } catch {
       setMe(null);
     }
+  }, []);
+
+  // Load schools
+  useEffect(() => {
+    async function fetchSchools() {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:4000/api/schools', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Failed to load schools');
+        setSchools(data);
+      } catch (err) {
+        console.error('Failed to load schools:', err);
+      }
+    }
+    fetchSchools();
   }, []);
 
   // Load all users
@@ -634,15 +663,211 @@ function OwnerLayout() {
     );
   }
 
-  return (
-    <div className="page" style={{ paddingBottom: '3.5rem' }}>
-      <h2 className="title">Owner Dashboard</h2>
-      <p>Manage all users across the platform.</p>
+  // Calculate statistics
+  const totalUsers = users.length;
+  const totalSchools = schools.length;
+  const activeUsers = users.filter(u => u.isActive).length;
+  const usersByRole = {
+    parent: users.filter(u => u.role === 'parent').length,
+    teacher: users.filter(u => u.role === 'teacher').length,
+    admin: users.filter(u => u.role === 'admin').length,
+    owner: users.filter(u => u.role === 'owner').length,
+  };
 
-      {/* Create user */}
-      <div className="card" style={{ marginBottom: '1rem' }}>
-        <h3>Create user</h3>
-        <form onSubmit={handleCreateUser}>
+  return (
+    <div className="dashboard-layout">
+      <Sidebar 
+        userRole="owner"
+        userName={me?.name}
+        userEmail={me?.email}
+        currentTab={tab}
+        onTabChange={setTab}
+        tabs={ownerTabs}
+      />
+      <div className="dashboard-content">
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h2 className="title" style={{ marginBottom: '0.5rem' }}>👑 Owner Dashboard</h2>
+          <p style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '0.95rem' }}>
+            Manage all users and schools across the platform
+          </p>
+        </div>
+
+        {/* Statistics Overview */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👥</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{totalUsers}</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Total Users</div>
+          </div>
+          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{activeUsers}</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Active</div>
+          </div>
+          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏫</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--info-color)' }}>{totalSchools}</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Schools</div>
+          </div>
+          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👨‍👩‍👧</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--warning-color)' }}>{usersByRole.parent}</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Parents</div>
+          </div>
+          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👨‍🏫</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{usersByRole.teacher}</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Teachers</div>
+          </div>
+          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎓</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--danger-color)' }}>{usersByRole.admin}</div>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Admins</div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="tab-container">
+          <button
+            onClick={() => setTab('dashboard')}
+            className={`tab-button ${tab === 'dashboard' ? 'active' : ''}`}
+          >
+            📊 Dashboard
+          </button>
+          <button
+            onClick={() => setTab('schools')}
+            className={`tab-button ${tab === 'schools' ? 'active' : ''}`}
+          >
+            🏫 Schools
+          </button>
+          <button
+            onClick={() => setTab('users')}
+            className={`tab-button ${tab === 'users' ? 'active' : ''}`}
+          >
+            👥 Users
+          </button>
+        </div>
+
+        {/* DASHBOARD TAB */}
+        {tab === 'dashboard' && (
+          <div className="card">
+            <h3>📊 Platform Overview</h3>
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Welcome to the EduckPro admin panel. Monitor and manage your entire platform.
+            </p>
+            
+            <div style={{ display: 'grid', gap: '1rem' }}>
+              <div style={{ 
+                padding: '1rem', 
+                backgroundColor: '#eff6ff', 
+                borderRadius: '0.5rem',
+                border: '1px solid #60a5fa'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>📈</span>
+                  <strong style={{ color: '#1e40af' }}>Platform Statistics</strong>
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#1e40af' }}>
+                  <div style={{ marginBottom: '0.5rem' }}>• {totalUsers} users registered across {totalSchools} schools</div>
+                  <div style={{ marginBottom: '0.5rem' }}>• {activeUsers} active users ({Math.round((activeUsers/totalUsers)*100)}% activity rate)</div>
+                  <div>• User distribution: {usersByRole.parent} parents, {usersByRole.teacher} teachers, {usersByRole.admin} admins</div>
+                </div>
+              </div>
+
+              <div style={{ 
+                padding: '1rem', 
+                backgroundColor: '#d1fae5', 
+                borderRadius: '0.5rem',
+                border: '1px solid #34d399'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>🎯</span>
+                  <strong style={{ color: '#065f46' }}>Quick Actions</strong>
+                </div>
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.75rem' }}>
+                  <button 
+                    className="btn" 
+                    onClick={() => setTab('users')}
+                    style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}
+                  >
+                    ➕ Create New User
+                  </button>
+                  <button 
+                    className="btn" 
+                    onClick={() => setTab('schools')}
+                    style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', backgroundColor: '#10b981' }}
+                  >
+                    🏫 View Schools
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCHOOLS TAB */}
+        {tab === 'schools' && (
+          <div className="card">
+            <h3>🏫 Schools Management</h3>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              View and manage all schools on the platform
+            </p>
+            
+            {schools.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏫</div>
+                <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>No schools registered yet</p>
+                <p style={{ fontSize: '0.9rem' }}>Schools will appear here as admins create them</p>
+              </div>
+            ) : (
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                {schools.map(school => (
+                  <li
+                    key={school.id}
+                    style={{
+                      borderBottom: '1px solid #e5e7eb',
+                      paddingBottom: '1rem',
+                      marginBottom: '1rem',
+                      backgroundColor: '#f9fafb',
+                      padding: '1rem',
+                      borderRadius: '0.5rem',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ flex: 1 }}>
+                        <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem', color: 'var(--primary-color)' }}>
+                          🏫 {school.name}
+                        </h4>
+                        {school.address && (
+                          <div style={{ fontSize: '0.85rem', color: '#6b7280', marginBottom: '0.25rem' }}>
+                            📍 {school.address}
+                            {school.city && `, ${school.city}`}
+                            {school.country && `, ${school.country}`}
+                          </div>
+                        )}
+                        {school._count && (
+                          <div style={{ fontSize: '0.85rem', color: '#4b5563', marginTop: '0.5rem' }}>
+                            <span style={{ marginRight: '1rem' }}>👨‍🎓 {school._count.students || 0} students</span>
+                            <span style={{ marginRight: '1rem' }}>📚 {school._count.classes || 0} classes</span>
+                            <span>👥 {school._count.users || 0} users</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        {/* USERS TAB */}
+        {tab === 'users' && (
+          <>
+            {/* Create user */}
+            <div className="card" style={{ marginBottom: '1rem' }}>
+              <h3>➕ Create New User</h3>
+              <form onSubmit={handleCreateUser}>
           <input
             placeholder="Full name"
             value={createForm.name}
@@ -812,7 +1037,12 @@ function OwnerLayout() {
           </ul>
         )}
       </div>
+        </>
+      )}
 
+      {/* PROFILE TAB */}
+      {tab === 'profile' && <ProfileSettings />}
+      </div>
     </div>
   );
 }
@@ -1898,7 +2128,7 @@ function ParentLayout() {
                       <button
                         className="btn"
                         onClick={() => {
-                          setTab('classes');
+                          setTab('schools');
                         }}
                         style={{
                           padding: '0.5rem 1rem',
@@ -2254,7 +2484,7 @@ function ParentMessages() {
   const [socket, setSocket] = useState(null);
   const [contactFilter, setContactFilter] = useState('all'); // 'all' | 'teacher' | 'admin'
 
-  // Contacts
+  // Contacts with unread count
   useEffect(() => {
     async function fetchContacts() {
       try {
@@ -2330,10 +2560,30 @@ function ParentMessages() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Failed to load messages');
       setMessages(data);
+      
+      // Mark messages as read
+      await markMessagesAsRead(contact.id);
+      
+      // Update contact's unread count in the list
+      setContacts(prev => prev.map(c => 
+        c.id === contact.id ? { ...c, unreadCount: 0 } : c
+      ));
     } catch (err) {
       setMsgError(err.message);
     } finally {
       setLoadingMessages(false);
+    }
+  }
+
+  async function markMessagesAsRead(contactId) {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(`http://localhost:4000/api/chat/mark-read/${contactId}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (err) {
+      console.error('Failed to mark messages as read:', err);
     }
   }
 
@@ -2433,17 +2683,33 @@ function ParentMessages() {
                           : '#ffffff',
                     }}
                   >
-                    <div style={{ fontWeight: 600 }}>
-                      {c.name}{' '}
-                      <span style={{ 
-                        fontSize: '0.7rem', 
-                        padding: '0.1rem 0.3rem', 
-                        borderRadius: '0.25rem',
-                        background: c.role === 'teacher' ? '#dbeafe' : '#fef3c7',
-                        color: c.role === 'teacher' ? '#1e40af' : '#92400e'
-                      }}>
-                        {c.role === 'teacher' ? '👨‍🏫' : '🏫'}
-                      </span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <div style={{ fontWeight: 600 }}>
+                        {c.name}{' '}
+                        <span style={{ 
+                          fontSize: '0.7rem', 
+                          padding: '0.1rem 0.3rem', 
+                          borderRadius: '0.25rem',
+                          background: c.role === 'teacher' ? '#dbeafe' : '#fef3c7',
+                          color: c.role === 'teacher' ? '#1e40af' : '#92400e'
+                        }}>
+                          {c.role === 'teacher' ? '👨‍🏫' : '🏫'}
+                        </span>
+                      </div>
+                      {c.unreadCount > 0 && (
+                        <span style={{
+                          backgroundColor: '#ef4444',
+                          color: 'white',
+                          borderRadius: '9999px',
+                          padding: '0.1rem 0.4rem',
+                          fontSize: '0.7rem',
+                          fontWeight: 'bold',
+                          minWidth: '1.2rem',
+                          textAlign: 'center',
+                        }}>
+                          {c.unreadCount}
+                        </span>
+                      )}
                     </div>
                     <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
                       {c.email}
@@ -3201,6 +3467,7 @@ function AdminLayout() {
   const adminTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'school', label: 'School', icon: '🏫' },
+    { id: 'teachers', label: 'Teachers', icon: '👨‍🏫' },
     { id: 'classes', label: 'Classes', icon: '📚' },
     { id: 'fees', label: 'Fees', icon: '💵' },
     { id: 'invoices', label: 'Invoices', icon: '📋' },
@@ -3661,37 +3928,156 @@ function AdminLayout() {
 
         {/* Statistics Overview */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('classes')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👨‍🎓</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{totalStudents}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Students</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('classes')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📚</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{totalClasses}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Classes</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('fees')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💵</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--info-color)' }}>{totalFees}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Fee Types</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('invoices')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📋</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--warning-color)' }}>{pendingInvoicesCount}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Pending</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('enrollments')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--danger-color)' }}>{pendingEnrollmentsCount}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>To Review</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('invoices')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💰</div>
             <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{totalRevenue.toLocaleString()}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>XOF Paid</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('invoices')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⏳</div>
             <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--warning-color)' }}>{pendingRevenue.toLocaleString()}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>XOF Due</div>
@@ -3738,10 +4124,230 @@ function AdminLayout() {
           </button>
         </div>
 
-        {/* SCHOOL TAB */}
-        {tab === 'school' && <SchoolInfo />}
+      {/* SCHOOL TAB */}
+      {tab === 'school' && <SchoolInfo />}
 
-        {/* DASHBOARD TAB */}
+      {/* TEACHERS TAB */}
+      {tab === 'teachers' && (
+        <>
+          <div className="card" style={{ marginBottom: '1rem' }}>
+            <h3>👨‍🏫 Add New Teacher</h3>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Create teacher accounts for your school staff
+            </p>
+            
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              const teacherData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role: 'teacher'
+              };
+
+              try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('http://localhost:4000/api/auth/register', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify(teacherData),
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Failed to create teacher');
+
+                alert('Teacher account created successfully!');
+                e.target.reset();
+                fetchTeachers();
+              } catch (err) {
+                alert('Error: ' + err.message);
+              }
+            }}>
+              <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem', fontWeight: '600' }}>
+                Full Name <span style={{ color: 'red' }}>*</span>
+              </label>
+              <input
+                name="name"
+                placeholder="e.g., John Smith"
+                required
+                style={{ width: '100%', padding: '0.5rem', marginBottom: '0.75rem' }}
+              />
+
+              <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem', fontWeight: '600' }}>
+                Email Address <span style={{ color: 'red' }}>*</span>
+              </label>
+              <input
+                name="email"
+                type="email"
+                placeholder="teacher@school.com"
+                required
+                style={{ width: '100%', padding: '0.5rem', marginBottom: '0.75rem' }}
+              />
+
+              <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem', fontWeight: '600' }}>
+                Initial Password <span style={{ color: 'red' }}>*</span>
+              </label>
+              <input
+                name="password"
+                type="password"
+                placeholder="At least 6 characters"
+                required
+                minLength={6}
+                style={{ width: '100%', padding: '0.5rem', marginBottom: '0.75rem' }}
+              />
+
+              <div style={{
+                padding: '0.75rem',
+                backgroundColor: '#eff6ff',
+                borderRadius: '0.5rem',
+                marginBottom: '1rem',
+                fontSize: '0.85rem',
+                color: '#1e40af'
+              }}>
+                ℹ️ <strong>Note:</strong> Teachers can be assigned to classes in the Classes tab after creation.
+              </div>
+
+              <button className="btn" type="submit" style={{ width: '100%', padding: '0.75rem' }}>
+                ✨ Create Teacher Account
+              </button>
+            </form>
+          </div>
+
+          <div className="card">
+            <h3>👥 All Teachers ({teachers.length})</h3>
+            {loadingTeachers ? (
+              <p>Loading teachers...</p>
+            ) : teachers.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👨‍🏫</div>
+                <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>No teachers yet</p>
+                <p style={{ fontSize: '0.9rem' }}>Create your first teacher account above</p>
+              </div>
+            ) : (
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                {teachers.map(teacher => (
+                  <li
+                    key={teacher.id}
+                    style={{
+                      borderBottom: '1px solid #e5e7eb',
+                      paddingBottom: '1rem',
+                      marginBottom: '1rem',
+                      backgroundColor: '#f9fafb',
+                      padding: '1rem',
+                      borderRadius: '0.5rem',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+                          <span style={{ fontSize: '1.5rem', marginRight: '0.5rem' }}>👨‍🏫</span>
+                          <div>
+                            <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem', color: 'var(--primary-color)' }}>
+                              {teacher.name}
+                            </h4>
+                            <div style={{ fontSize: '0.85rem', color: '#6b7280' }}>
+                              ✉️ {teacher.email}
+                            </div>
+                          </div>
+                        </div>
+
+                        {teacher._count && (
+                          <div style={{ fontSize: '0.85rem', color: '#4b5563', marginTop: '0.5rem' }}>
+                            📚 Teaching {teacher._count.classes || 0} class{teacher._count.classes !== 1 ? 'es' : ''}
+                          </div>
+                        )}
+
+                        {teacher.classes && teacher.classes.length > 0 && (
+                          <div style={{ marginTop: '0.75rem' }}>
+                            <div style={{ fontSize: '0.8rem', color: '#6b7280', marginBottom: '0.5rem' }}>
+                              <strong>Assigned Classes:</strong>
+                            </div>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                              {teacher.classes.map(cls => (
+                                <span
+                                  key={cls.id}
+                                  style={{
+                                    padding: '0.25rem 0.6rem',
+                                    backgroundColor: '#dbeafe',
+                                    border: '1px solid #60a5fa',
+                                    borderRadius: '0.25rem',
+                                    fontSize: '0.75rem',
+                                    color: '#1e40af',
+                                  }}
+                                >
+                                  📖 {cls.name}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      <div style={{
+                        marginLeft: '1rem',
+                        padding: '0.75rem',
+                        backgroundColor: '#ffffff',
+                        borderRadius: '0.5rem',
+                        textAlign: 'center',
+                        minWidth: '80px',
+                        border: '1px solid #e5e7eb',
+                      }}>
+                        <div style={{ 
+                          fontSize: '1rem', 
+                          fontWeight: 'bold', 
+                          color: teacher.isActive ? 'var(--success-color)' : 'var(--danger-color)' 
+                        }}>
+                          {teacher.isActive ? '✅' : '❌'}
+                        </div>
+                        <div style={{ fontSize: '0.7rem', color: '#6b7280' }}>
+                          {teacher.isActive ? 'Active' : 'Inactive'}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', paddingTop: '0.75rem', borderTop: '1px solid #e5e7eb' }}>
+                      <button
+                        className="btn"
+                        onClick={() => setTab('classes')}
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', backgroundColor: '#10b981' }}
+                      >
+                        📚 Assign to Class
+                      </button>
+                      <button
+                        className="btn"
+                        onClick={async () => {
+                          if (!window.confirm(`Reset password for ${teacher.name}?`)) return;
+                          try {
+                            const token = localStorage.getItem('token');
+                            const res = await fetch(`http://localhost:4000/api/admin/teachers/${teacher.id}/reset-password`, {
+                              method: 'POST',
+                              headers: { Authorization: `Bearer ${token}` },
+                            });
+                            const data = await res.json();
+                            if (!res.ok) throw new Error(data.message);
+                            alert(`Password reset successful!\nNew temporary password: ${data.newPassword}`);
+                          } catch (err) {
+                            alert('Error: ' + err.message);
+                          }
+                        }}
+                        style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', backgroundColor: '#f59e0b' }}
+                      >
+                        🔑 Reset Password
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* DASHBOARD TAB */}
         {tab === 'dashboard' && (
           <div>
             <div className="card" style={{ marginBottom: '1rem' }}>

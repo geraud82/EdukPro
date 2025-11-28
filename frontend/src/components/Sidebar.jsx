@@ -1,14 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Notifications from './Notifications';
 import './Sidebar.css';
 
 function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs }) {
   const navigate = useNavigate();
-  // Start collapsed on mobile devices
-  const [isCollapsed, setIsCollapsed] = useState(() => {
-    return window.innerWidth <= 768;
-  });
+  
+  // Check if device is mobile
+  const isMobile = () => window.innerWidth <= 768;
+  
+  // Start collapsed on mobile devices (true = collapsed/hidden on mobile)
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  // Initialize collapsed state based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      // On mobile, keep it collapsed by default
+      if (isMobile()) {
+        setIsCollapsed(true);
+      }
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
@@ -19,7 +41,7 @@ function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs 
   };
 
   const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
+    setIsCollapsed(prev => !prev);
   };
 
   const getRoleIcon = (role) => {
@@ -83,7 +105,7 @@ function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs 
               onClick={() => {
                 onTabChange && onTabChange(tab.id);
                 // Auto-close sidebar on mobile after selecting a tab
-                if (window.innerWidth <= 768) {
+                if (isMobile()) {
                   setIsCollapsed(true);
                 }
               }}

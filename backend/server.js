@@ -1714,7 +1714,7 @@ app.get('/api/chat/contacts', authMiddleware, async (req, res) => {
     } else if (req.user.role === 'admin') {
       // Admins can chat with:
       // 1. Teachers in their school
-      // 2. Parents of students enrolled in classes at their school
+      // 2. Parents of ALL students at their school (with or without enrollments)
 
       const contactMap = new Map();
 
@@ -1737,32 +1737,25 @@ app.get('/api/chat/contacts', authMiddleware, async (req, res) => {
           contactMap.set(teacher.id, teacher);
         });
 
-        // Get parents of students enrolled in classes at this school
-        const enrollments = await prisma.enrollment.findMany({
+        // Get parents of ALL students at this school
+        const students = await prisma.student.findMany({
           where: {
-            status: 'APPROVED',
-            class: {
-              schoolId: req.user.schoolId,
-            },
+            schoolId: req.user.schoolId,
           },
           include: {
-            student: {
-              include: {
-                parent: {
-                  select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    role: true,
-                  },
-                },
+            parent: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
               },
             },
           },
         });
 
-        enrollments.forEach(enrollment => {
-          const parent = enrollment.student.parent;
+        students.forEach(student => {
+          const parent = student.parent;
           if (parent && !contactMap.has(parent.id)) {
             contactMap.set(parent.id, parent);
           }
@@ -1774,7 +1767,24 @@ app.get('/api/chat/contacts', authMiddleware, async (req, res) => {
       );
     }
 
-    res.json(contacts);
+    // Add unread message count for each contact
+    const contactsWithUnread = await Promise.all(
+      contacts.map(async (contact) => {
+        const unreadCount = await prisma.message.count({
+          where: {
+            senderId: contact.id,
+            receiverId: req.user.id,
+            readAt: null,
+          },
+        });
+        return {
+          ...contact,
+          unreadCount,
+        };
+      })
+    );
+
+    res.json(contactsWithUnread);
   } catch (err) {
     console.error('Get contacts error:', err);
     res.status(500).json({ message: 'Server error' });
@@ -1799,6 +1809,30 @@ app.get('/api/chat/conversation/:userId', authMiddleware, async (req, res) => {
     res.json(messages);
   } catch (err) {
     console.error('Get conversation error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Mark messages as read
+app.post('/api/chat/mark-read/:contactId', authMiddleware, async (req, res) => {
+  try {
+    const contactId = Number(req.params.contactId);
+
+    // Mark all unread messages from this contact as read
+    await prisma.message.updateMany({
+      where: {
+        senderId: contactId,
+        receiverId: req.user.id,
+        readAt: null,
+      },
+      data: {
+        readAt: new Date(),
+      },
+    });
+
+    res.json({ message: 'Messages marked as read' });
+  } catch (err) {
+    console.error('Mark messages as read error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
