@@ -64,6 +64,8 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
+  'http://localhost:4000',
+  'https://edukpro.vercel.app',
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
@@ -1944,8 +1946,8 @@ app.post('/api/chat/messages', authMiddleware, async (req, res) => {
         .emit('chat:new-message', message);
     }
 
-    // 📱 Send push notification to receiver (if app is closed)
-    if (sender) {
+    // 📱 Send push notification to receiver (if app is closed and push is enabled)
+    if (sender && pushService.isPushNotificationsEnabled()) {
       await pushService.sendNewMessageNotification(
         Number(receiverId),
         sender.name,

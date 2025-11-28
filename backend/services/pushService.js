@@ -1,11 +1,26 @@
 const webpush = require('web-push');
 
-// Configure web-push with VAPID keys
-webpush.setVapidDetails(
-  process.env.VAPID_SUBJECT || 'mailto:admin@educkpro.com',
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
+// Check if VAPID keys are configured
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY;
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:admin@educkpro.com';
+
+// Only configure web-push if VAPID keys are present
+let isPushEnabled = false;
+if (vapidPublicKey && vapidPrivateKey) {
+  try {
+    webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
+    isPushEnabled = true;
+    console.log('✅ Push notifications configured successfully');
+  } catch (error) {
+    console.error('❌ Error configuring push notifications:', error.message);
+    console.log('⚠️  Push notifications will be disabled');
+  }
+} else {
+  console.warn('⚠️  VAPID keys not found. Push notifications are disabled.');
+  console.warn('   To enable push notifications, set VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY environment variables.');
+  console.warn('   Run "node generate-vapid-keys.js" to generate new keys.');
+}
 
 // In-memory storage for push subscriptions (in production, use database)
 const subscriptions = new Map();
@@ -14,8 +29,13 @@ const subscriptions = new Map();
  * Store a push subscription for a user
  */
 function saveSubscription(userId, subscription) {
+  if (!isPushEnabled) {
+    console.log('Push notifications disabled - subscription not saved');
+    return false;
+  }
   subscriptions.set(userId, subscription);
   console.log(`Push subscription saved for user ${userId}`);
+  return true;
 }
 
 /**
@@ -37,6 +57,11 @@ function removeSubscription(userId) {
  * Send a push notification to a specific user
  */
 async function sendPushNotification(userId, payload) {
+  if (!isPushEnabled) {
+    console.log('Push notifications disabled - notification not sent');
+    return false;
+  }
+
   const subscription = getSubscription(userId);
   
   if (!subscription) {
@@ -165,7 +190,14 @@ async function sendPaymentConfirmation(userId, paymentData) {
  * Get VAPID public key
  */
 function getVapidPublicKey() {
-  return process.env.VAPID_PUBLIC_KEY;
+  return vapidPublicKey;
+}
+
+/**
+ * Check if push notifications are enabled
+ */
+function isPushNotificationsEnabled() {
+  return isPushEnabled;
 }
 
 module.exports = {
@@ -178,5 +210,6 @@ module.exports = {
   sendNewInvoiceNotification,
   sendEnrollmentNotification,
   sendPaymentConfirmation,
-  getVapidPublicKey
+  getVapidPublicKey,
+  isPushNotificationsEnabled
 };
