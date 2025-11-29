@@ -157,24 +157,31 @@ Visit: http://localhost:5173
 
 ## 🚀 Deployment
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions for Vercel (frontend) and Render (backend).
+### Deployment Guides
+
+- **📋 Quick Start**: [VERCEL-DEPLOYMENT-CHECKLIST.md](./VERCEL-DEPLOYMENT-CHECKLIST.md) - 10-minute checklist
+- **📖 Detailed Vercel Guide**: [VERCEL-DEPLOYMENT-GUIDE.md](./VERCEL-DEPLOYMENT-GUIDE.md) - Complete Vercel documentation
+- **📖 Full Deployment**: [DEPLOYMENT.md](./DEPLOYMENT.md) - Vercel + Render complete setup
+- **🔧 Backend (Render)**: [RENDER-DEPLOYMENT-GUIDE.md](./RENDER-DEPLOYMENT-GUIDE.md) - Backend deployment
 
 ### Quick Deployment Summary
 
-1. **Backend (Render)**:
-   - Create PostgreSQL database
-   - Deploy backend service
-   - Set environment variables
-   - Run `npx prisma db seed`
+**Frontend to Vercel (5-10 minutes)**:
+1. Push code to GitHub
+2. Import project at https://vercel.com/new
+3. Set root directory to `frontend`
+4. Add environment variable: `VITE_API_URL`
+5. Deploy and copy URL
+6. Update backend CORS with Vercel URL
 
-2. **Frontend (Vercel)**:
-   - Deploy from GitHub
-   - Set `VITE_API_URL` environment variable
-   - Auto-deploys on push
+**Backend to Render**:
+1. Create PostgreSQL database
+2. Deploy backend service
+3. Set environment variables
+4. Run `npx prisma db seed`
+5. Copy backend URL for frontend
 
-3. **Configure**:
-   - Update CORS in backend with Vercel URL
-   - Update PWA manifest with production URL
+**Ready to deploy?** Start with [VERCEL-DEPLOYMENT-CHECKLIST.md](./VERCEL-DEPLOYMENT-CHECKLIST.md)
 
 ## 📚 Documentation
 
