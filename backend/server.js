@@ -65,6 +65,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:4000',
+  'https://eduk-pro.vercel.app',
   'https://edukpro.vercel.app',
   'https://edukpro-m7vvl1912-geraud82s-projects.vercel.app',
   process.env.FRONTEND_URL
