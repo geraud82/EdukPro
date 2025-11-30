@@ -3121,5 +3121,5 @@ app.patch('/api/schools/:id', authMiddleware, async (req, res) => {
 
 
 server.listen(PORT, () => {
-  console.log(`School API + Socket.IO listening on http://localhost:${PORT}`);
+  console.log(`School API + Socket.IO listening on port ${PORT}`);
 });
