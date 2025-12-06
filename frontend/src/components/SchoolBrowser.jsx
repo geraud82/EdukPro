@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import './SchoolBrowser.css';
-
-const API_BASE = 'http://localhost:4000';
 
 function SchoolBrowser({ onSelectSchool, students = [] }) {
   const [schools, setSchools] = useState([]);
@@ -25,7 +24,7 @@ function SchoolBrowser({ onSelectSchool, students = [] }) {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE}/api/schools`, {
+      const response = await fetch(`${API_URL}/api/schools`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,7 +68,7 @@ function SchoolBrowser({ onSelectSchool, students = [] }) {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE}/api/classes?schoolId=${school.id}`, {
+      const response = await fetch(`${API_URL}/api/classes?schoolId=${school.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -337,7 +336,7 @@ function EnrollmentSection({ cls, students, schoolName }) {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await fetch(`${API_BASE}/api/enrollments`, {
+      const res = await fetch(`${API_URL}/api/enrollments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

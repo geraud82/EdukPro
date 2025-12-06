@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Bell, X, Check, CheckCheck } from 'lucide-react';
+import { io } from 'socket.io-client';
+import { API_URL } from '../config';
 import './Notifications.css';
-
-const API_URL = 'http://localhost:4000';
 
 function Notifications() {
   const [notifications, setNotifications] = useState([]);

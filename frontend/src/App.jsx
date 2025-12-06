@@ -6,6 +6,7 @@ import SchoolInfo from './components/SchoolInfo';
 import SchoolBrowser from './components/SchoolBrowser';
 import StudentEnrollmentForm from './components/StudentEnrollmentForm';
 import Notifications from './components/Notifications';
+import { API_URL } from './config';
 
 function App() {
   return (
@@ -241,7 +242,7 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:4000/api/auth/login', {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -425,7 +426,7 @@ function SignUpPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://https://edukpro.onrender.com', {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -695,7 +696,7 @@ function OwnerLayout() {
     async function fetchSchools() {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:4000/api/schools', {
+        const res = await fetch(`${API_URL}/api/schools`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -715,7 +716,7 @@ function OwnerLayout() {
       setLoading(true);
       const token = localStorage.getItem('token');
       const params = search ? `?search=${encodeURIComponent(search)}` : '';
-      const res = await fetch(`http://localhost:4000/api/owner/users${params}`, {
+      const res = await fetch(`${API_URL}/api/owner/users${params}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -751,7 +752,7 @@ function OwnerLayout() {
         payload.schoolId = Number(createForm.schoolId);
       }
 
-      const res = await fetch('http://localhost:4000/api/owner/users', {
+      const res = await fetch(`${API_URL}/api/owner/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -781,7 +782,7 @@ function OwnerLayout() {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:4000/api/owner/users/${id}/role`,
+        `${API_URL}/api/owner/users/${id}/role`,
         {
           method: 'PATCH',
           headers: {
@@ -804,7 +805,7 @@ function OwnerLayout() {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:4000/api/owner/users/${user.id}/status`,
+        `${API_URL}/api/owner/users/${user.id}/status`,
         {
           method: 'PATCH',
           headers: {
@@ -828,7 +829,7 @@ function OwnerLayout() {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:4000/api/owner/users/${id}/reset-password`,
+        `${API_URL}/api/owner/users/${id}/reset-password`,
         {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
@@ -1322,7 +1323,7 @@ function ParentLayout() {
         setClassError('');
         const token = localStorage.getItem('token');
 
-        const res = await fetch('http://localhost:4000/api/classes', {
+        const res = await fetch(`${API_URL}/api/classes`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -1355,7 +1356,7 @@ function ParentLayout() {
           return;
         }
 
-        const res = await fetch('http://localhost:4000/api/students/my', {
+        const res = await fetch(`${API_URL}/api/students/my`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -1395,7 +1396,7 @@ function ParentLayout() {
           return;
         }
 
-        const res = await fetch('http://localhost:4000/api/invoices/my', {
+        const res = await fetch(`${API_URL}/api/invoices/my`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -1426,7 +1427,7 @@ function ParentLayout() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const s = io('http://localhost:4000', {
+    const s = io(API_URL, {
       auth: { token },
     });
 
@@ -1482,7 +1483,7 @@ function ParentLayout() {
         emergencyPhone: studentForm.emergencyPhone || null,
       };
 
-      const res = await fetch('http://localhost:4000/api/students', {
+      const res = await fetch(`${API_URL}/api/students`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1530,7 +1531,7 @@ function ParentLayout() {
       const token = localStorage.getItem('token');
 
       const res = await fetch(
-        `http://localhost:4000/api/invoices/${invoiceId}/pay`,
+        `${API_URL}/api/invoices/${invoiceId}/pay`,
         {
           method: 'POST',
           headers: {
@@ -2690,7 +2691,7 @@ function ParentMessages() {
         setMsgError('');
         setLoadingContacts(true);
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:4000/api/chat/contacts', {
+        const res = await fetch(`${API_URL}/api/chat/contacts`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -2716,7 +2717,7 @@ function ParentMessages() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const s = io('http://localhost:4000', {
+    const s = io(API_URL, {
       auth: { token },
     });
 
@@ -2751,7 +2752,7 @@ function ParentMessages() {
       setLoadingMessages(true);
       const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:4000/api/chat/conversation/${contact.id}`,
+        `${API_URL}/api/chat/conversation/${contact.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -2777,7 +2778,7 @@ function ParentMessages() {
   async function markMessagesAsRead(contactId) {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`http://localhost:4000/api/chat/mark-read/${contactId}`, {
+      await fetch(`${API_URL}/api/chat/mark-read/${contactId}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -2793,7 +2794,7 @@ function ParentMessages() {
     try {
       setMsgError('');
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/chat/messages', {
+      const res = await fetch(`${API_URL}/api/chat/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -3071,7 +3072,7 @@ function TeacherLayout() {
         setClassError('');
         const token = localStorage.getItem('token');
         
-        const res = await fetch('http://localhost:4000/api/classes/my', {
+        const res = await fetch(`${API_URL}/api/classes/my`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -3387,7 +3388,7 @@ function TeacherMessages() {
         setMsgError('');
         setLoadingContacts(true);
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:4000/api/chat/contacts', {
+        const res = await fetch(`${API_URL}/api/chat/contacts`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -3406,7 +3407,7 @@ function TeacherMessages() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const s = io('http://localhost:4000', {
+    const s = io(API_URL, {
       auth: { token },
     });
 
@@ -3441,7 +3442,7 @@ function TeacherMessages() {
       setLoadingMessages(true);
       const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:4000/api/chat/conversation/${contact.id}`,
+        `${API_URL}/api/chat/conversation/${contact.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -3463,7 +3464,7 @@ function TeacherMessages() {
     try {
       setMsgError('');
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/chat/messages', {
+      const res = await fetch(`${API_URL}/api/chat/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -3745,7 +3746,7 @@ function AdminLayout() {
         const token = localStorage.getItem('token');
 
         const res = await fetch(
-          'http://localhost:4000/api/admin/enrollments?status=PENDING',
+          `${API_URL}/api/admin/enrollments?status=PENDING`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -3769,7 +3770,7 @@ function AdminLayout() {
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:4000/api/admin/enrollments/${id}/approve`,
+        `${API_URL}/api/admin/enrollments/${id}/approve`,
         {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
@@ -3793,7 +3794,7 @@ function AdminLayout() {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const res = await fetch('http://localhost:4000/api/profile', {
+        const res = await fetch(`${API_URL}/api/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -3825,7 +3826,7 @@ function AdminLayout() {
     async function fetchFees() {
       try {
         setLoadingFees(true);
-        const res = await fetch('http://localhost:4000/api/fees', {
+        const res = await fetch(`${API_URL}/api/fees`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -3840,7 +3841,7 @@ function AdminLayout() {
 
     async function fetchStudents() {
       try {
-        const res = await fetch('http://localhost:4000/api/admin/students', {
+        const res = await fetch(`${API_URL}/api/admin/students`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -3854,7 +3855,7 @@ function AdminLayout() {
     async function fetchInvoices() {
       try {
         setLoadingInvoices(true);
-        const res = await fetch('http://localhost:4000/api/admin/invoices', {
+        const res = await fetch(`${API_URL}/api/admin/invoices`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -3871,7 +3872,7 @@ function AdminLayout() {
       try {
         setLoadingClasses(true);
         setClassError('');
-        const res = await fetch('http://localhost:4000/api/classes', {
+        const res = await fetch(`${API_URL}/api/classes`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -3895,7 +3896,7 @@ function AdminLayout() {
     try {
       setLoadingTeachers(true);
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/admin/teachers', {
+      const res = await fetch(`${API_URL}/api/admin/teachers`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -3918,8 +3919,8 @@ function AdminLayout() {
       
       // Check if we're editing or creating
       const url = editingFeeId 
-        ? `http://localhost:4000/api/fees/${editingFeeId}`
-        : 'http://localhost:4000/api/fees';
+        ? `${API_URL}/api/fees/${editingFeeId}`
+        : `${API_URL}/api/fees`;
       const method = editingFeeId ? 'PATCH' : 'POST';
       
       const res = await fetch(url, {
@@ -3964,7 +3965,7 @@ function AdminLayout() {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/invoices', {
+      const res = await fetch(`${API_URL}/api/invoices`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -3998,7 +3999,7 @@ function AdminLayout() {
       setCreatingEnrollment(true);
       const token = localStorage.getItem('token');
 
-      const res = await fetch('http://localhost:4000/api/admin/enrollments', {
+      const res = await fetch(`${API_URL}/api/admin/enrollments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -4048,8 +4049,8 @@ function AdminLayout() {
 
       // Check if we're editing or creating
       const url = editingClassId 
-        ? `http://localhost:4000/api/classes/${editingClassId}`
-        : 'http://localhost:4000/api/classes';
+        ? `${API_URL}/api/classes/${editingClassId}`
+        : `${API_URL}/api/classes`;
       const method = editingClassId ? 'PATCH' : 'POST';
 
       const res = await fetch(url, {
@@ -4346,7 +4347,7 @@ function AdminLayout() {
 
               try {
                 const token = localStorage.getItem('token');
-                const res = await fetch('http://localhost:4000/api/admin/teachers', {
+                const res = await fetch(`${API_URL}/api/admin/teachers`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -4521,7 +4522,7 @@ function AdminLayout() {
                           if (!window.confirm(`Reset password for ${teacher.name}?`)) return;
                           try {
                             const token = localStorage.getItem('token');
-                            const res = await fetch(`http://localhost:4000/api/admin/teachers/${teacher.id}/reset-password`, {
+                            const res = await fetch(`${API_URL}/api/admin/teachers/${teacher.id}/reset-password`, {
                               method: 'POST',
                               headers: { Authorization: `Bearer ${token}` },
                             });
@@ -4963,7 +4964,7 @@ function AdminLayout() {
                           if (!window.confirm(`Delete class "${cls.name}"? This cannot be undone.`)) return;
                           try {
                             const token = localStorage.getItem('token');
-                            const res = await fetch(`http://localhost:4000/api/classes/${cls.id}`, {
+                            const res = await fetch(`${API_URL}/api/classes/${cls.id}`, {
                               method: 'DELETE',
                               headers: { Authorization: `Bearer ${token}` },
                             });
@@ -5167,7 +5168,7 @@ function AdminLayout() {
                           if (!window.confirm(`Delete fee "${fee.name}"? This cannot be undone.`)) return;
                           try {
                             const token = localStorage.getItem('token');
-                            const res = await fetch(`http://localhost:4000/api/fees/${fee.id}`, {
+                            const res = await fetch(`${API_URL}/api/fees/${fee.id}`, {
                               method: 'DELETE',
                               headers: { Authorization: `Bearer ${token}` },
                             });
@@ -5331,7 +5332,7 @@ function AdminLayout() {
                           
                           try {
                             const token = localStorage.getItem('token');
-                            const res = await fetch(`http://localhost:4000/api/admin/invoices/${inv.id}/status`, {
+                            const res = await fetch(`${API_URL}/api/admin/invoices/${inv.id}/status`, {
                               method: 'PATCH',
                               headers: {
                                 'Content-Type': 'application/json',
@@ -5361,7 +5362,7 @@ function AdminLayout() {
                           
                           try {
                             const token = localStorage.getItem('token');
-                            const res = await fetch(`http://localhost:4000/api/admin/invoices/${inv.id}/due-date`, {
+                            const res = await fetch(`${API_URL}/api/admin/invoices/${inv.id}/due-date`, {
                               method: 'PATCH',
                               headers: {
                                 'Content-Type': 'application/json',
@@ -5391,7 +5392,7 @@ function AdminLayout() {
                             
                             try {
                               const token = localStorage.getItem('token');
-                              const res = await fetch(`http://localhost:4000/api/invoices/${inv.id}/pay`, {
+                              const res = await fetch(`${API_URL}/api/invoices/${inv.id}/pay`, {
                                 method: 'POST',
                                 headers: { Authorization: `Bearer ${token}` },
                               });
@@ -5448,7 +5449,7 @@ function AdminLayout() {
                   onSubmit={async (student) => {
                     // Refresh students list
                     const token = localStorage.getItem('token');
-                    const res = await fetch('http://localhost:4000/api/admin/students', {
+                    const res = await fetch(`${API_URL}/api/admin/students`, {
                       headers: { Authorization: `Bearer ${token}` },
                     });
                     const data = await res.json();
@@ -5459,7 +5460,7 @@ function AdminLayout() {
                     alert('Student created successfully! You can now enroll them in classes.');
                   }}
                   onCancel={() => setShowEnrollmentForm(false)}
-                  API_URL="http://localhost:4000"
+                  API_URL={API_URL}
                   token={localStorage.getItem('token')}
                   classes={classes}
                 />
@@ -5617,7 +5618,7 @@ function AdminMessages() {
         setMsgError('');
         setLoadingContacts(true);
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:4000/api/chat/contacts', {
+        const res = await fetch(`${API_URL}/api/chat/contacts`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -5636,7 +5637,7 @@ function AdminMessages() {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const s = io('http://localhost:4000', {
+    const s = io(API_URL, {
       auth: { token },
     });
 
@@ -5671,7 +5672,7 @@ function AdminMessages() {
       setLoadingMessages(true);
       const token = localStorage.getItem('token');
       const res = await fetch(
-        `http://localhost:4000/api/chat/conversation/${contact.id}`,
+        `${API_URL}/api/chat/conversation/${contact.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -5693,7 +5694,7 @@ function AdminMessages() {
     try {
       setMsgError('');
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/chat/messages', {
+      const res = await fetch(`${API_URL}/api/chat/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -5945,7 +5946,7 @@ function SchoolSearch({ students }) {
         setError('');
         const token = localStorage.getItem('token');
         
-        const res = await fetch('http://localhost:4000/api/schools', {
+        const res = await fetch(`${API_URL}/api/schools`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -5980,7 +5981,7 @@ function SchoolSearch({ students }) {
       const token = localStorage.getItem('token');
       
       const res = await fetch(
-        `http://localhost:4000/api/schools?search=${encodeURIComponent(searchQuery)}`,
+        `${API_URL}/api/schools?search=${encodeURIComponent(searchQuery)}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -6010,7 +6011,7 @@ function SchoolSearch({ students }) {
       
       // Fetch classes for this school
       const res = await fetch(
-        `http://localhost:4000/api/classes?schoolId=${school.id}`,
+        `${API_URL}/api/classes?schoolId=${school.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -6355,7 +6356,7 @@ function ProfileSettings() {
     async function loadProfile() {
       try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:4000/api/profile', {
+        const res = await fetch(`${API_URL}/api/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -6381,7 +6382,7 @@ function ProfileSettings() {
     try {
       setUpdating(true);
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/profile', {
+      const res = await fetch(`${API_URL}/api/profile`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -6423,7 +6424,7 @@ function ProfileSettings() {
     try {
       setPasswordLoading(true);
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/profile/change-password', {
+      const res = await fetch(`${API_URL}/api/profile/change-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -6621,7 +6622,7 @@ function EnrollForm({ cls, students }) {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const res = await fetch('http://localhost:4000/api/enrollments', {
+      const res = await fetch(`${API_URL}/api/enrollments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 
 function SchoolInfo() {
   const [school, setSchool] = useState(null);
@@ -35,7 +36,7 @@ function SchoolInfo() {
       const token = localStorage.getItem('token');
       
       // First, fetch the user's profile to get the current schoolId
-      const profileRes = await fetch('http://localhost:4000/api/profile', {
+      const profileRes = await fetch(`${API_URL}/api/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -54,7 +55,7 @@ function SchoolInfo() {
 
       // If we have school data from profile, use it directly
       if (profileData.school) {
-        const res = await fetch(`http://localhost:4000/api/schools/${profileData.school.id}`, {
+        const res = await fetch(`${API_URL}/api/schools/${profileData.school.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -92,7 +93,7 @@ function SchoolInfo() {
       const token = localStorage.getItem('token');
       const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-      const res = await fetch(`http://localhost:4000/api/schools/${user.schoolId}`, {
+      const res = await fetch(`${API_URL}/api/schools/${user.schoolId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +132,7 @@ function SchoolInfo() {
       const token = localStorage.getItem('token');
 
       // Create new school
-      const res = await fetch('http://localhost:4000/api/schools', {
+      const res = await fetch(`${API_URL}/api/schools`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
