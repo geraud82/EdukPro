@@ -644,6 +644,8 @@ function SignUpPage() {
                 fontSize: 'inherit'
               }}
             >
+              console.log("API_URL utilisé =", API_URL);
+
               Sign In
             </button>
           </p>
