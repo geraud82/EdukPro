@@ -645,7 +645,6 @@ function SignUpPage() {
                 fontSize: 'inherit'
               }}
             >
-              console.log("API_URL utilisé =", API_URL);
 
               Sign In
             </button>
@@ -654,6 +653,7 @@ function SignUpPage() {
       </div>
     </div>
   );
+   console.log("API_URL utilisé =", API_URL);
 }
 /* ===================== OWNER LAYOUT ===================== */
 
