@@ -394,7 +394,6 @@ function LoginPage() {
 }
 
 /* ======================= SIGN UP PAGE ======================= */
-import { API_URL } from "../utils/config";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -653,8 +652,8 @@ function SignUpPage() {
       </div>
     </div>
   );
-   console.log("API_URL utilisé =", API_URL);
 }
+
 /* ===================== OWNER LAYOUT ===================== */
 
 function OwnerLayout() {
