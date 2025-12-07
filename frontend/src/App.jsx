@@ -394,6 +394,7 @@ function LoginPage() {
 }
 
 /* ======================= SIGN UP PAGE ======================= */
+import { API_URL } from "../utils/config";
 
 function SignUpPage() {
   const navigate = useNavigate();
