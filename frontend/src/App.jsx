@@ -6,7 +6,7 @@ import SchoolInfo from './components/SchoolInfo';
 import SchoolBrowser from './components/SchoolBrowser';
 import StudentEnrollmentForm from './components/StudentEnrollmentForm';
 import Notifications from './components/Notifications';
-import { API_URL } from './config';
+import { API_URL } from './utils/config';
 
 function App() {
   return (
