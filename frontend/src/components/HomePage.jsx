@@ -146,10 +146,6 @@ function HomePage() {
           <div className="hero-shape hero-shape-3"></div>
         </div>
         <div className="hero-content">
-          <div className="hero-badge">
-            <span className="badge-icon">✨</span>
-            <span>Modern School Management Platform</span>
-          </div>
           <h1 className="hero-title">
             Transform Your School
             <br />
