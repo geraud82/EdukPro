@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
 import { API_URL } from '../config';
+import { Bell, CheckCheck, Check, X } from 'lucide-react';
 import './Notifications.css';
 
 function Notifications() {
@@ -52,21 +52,26 @@ function Notifications() {
     }
   };
 
-  // Mark as read
+  // Mark one as read
   const markAsRead = async (notificationId) => {
     if (!token) return;
 
     try {
-      const response = await fetch(`${API_URL}/api/notifications/${notificationId}/read`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${API_URL}/api/notifications/${notificationId}/read`,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         setNotifications(prev =>
-          prev.map(n => (n.id === notificationId ? { ...n, isRead: true } : n))
+          prev.map(n =>
+            n.id === notificationId ? { ...n, isRead: true } : n
+          )
         );
         setUnreadCount(prev => Math.max(0, prev - 1));
       }
@@ -81,12 +86,15 @@ function Notifications() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/notifications/mark-all-read`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${API_URL}/api/notifications/mark-all-read`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
@@ -104,12 +112,15 @@ function Notifications() {
     if (!token) return;
 
     try {
-      const response = await fetch(`${API_URL}/api/notifications/${notificationId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${API_URL}/api/notifications/${notificationId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         setNotifications(prev => prev.filter(n => n.id !== notificationId));
@@ -128,15 +139,14 @@ function Notifications() {
     }
   }, [token]);
 
-  // Socket.IO listener for new notifications
+  // Socket listener
   useEffect(() => {
     if (!window.socket) return;
 
     const handleNewNotification = (notification) => {
       setNotifications(prev => [notification, ...prev]);
       setUnreadCount(prev => prev + 1);
-      
-      // Optional: Show browser notification
+
       if (Notification.permission === 'granted') {
         new Notification(notification.title, {
           body: notification.message,
@@ -179,16 +189,23 @@ function Notifications() {
       >
         <Bell size={20} />
         {unreadCount > 0 && (
-          <span className="notifications-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
+          <span className="notifications-badge">
+            {unreadCount > 99 ? '99+' : unreadCount}
+          </span>
         )}
       </button>
 
       {showPanel && (
         <>
-          <div className="notifications-overlay" onClick={() => setShowPanel(false)} />
+          <div
+            className="notifications-overlay"
+            onClick={() => setShowPanel(false)}
+          />
+
           <div className="notifications-panel">
             <div className="notifications-header">
               <h3>Notifications</h3>
+
               {unreadCount > 0 && (
                 <button
                   className="mark-all-read-btn"
@@ -211,14 +228,25 @@ function Notifications() {
                 notifications.map(notification => (
                   <div
                     key={notification.id}
-                    className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
-                    onClick={() => !notification.isRead && markAsRead(notification.id)}
+                    className={`notification-item ${
+                      !notification.isRead ? 'unread' : ''
+                    }`}
+                    onClick={() =>
+                      !notification.isRead && markAsRead(notification.id)
+                    }
                   >
                     <div className="notification-content">
-                      <div className="notification-title">{notification.title}</div>
-                      <div className="notification-message">{notification.message}</div>
-                      <div className="notification-time">{formatTime(notification.createdAt)}</div>
+                      <div className="notification-title">
+                        {notification.title}
+                      </div>
+                      <div className="notification-message">
+                        {notification.message}
+                      </div>
+                      <div className="notification-time">
+                        {formatTime(notification.createdAt)}
+                      </div>
                     </div>
+
                     <div className="notification-actions">
                       {!notification.isRead && (
                         <button
@@ -232,6 +260,7 @@ function Notifications() {
                           <Check size={16} />
                         </button>
                       )}
+
                       <button
                         className="notification-action-btn delete"
                         onClick={(e) => {
