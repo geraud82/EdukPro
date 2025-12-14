@@ -1,21 +1,26 @@
 {
-  "short_name": "SchoolApp",
-  "name": "School Parent Portal",
+  "short_name": "EduckPro",
+  "name": "EduckPro - Modern School Management",
+  "description": "Transform your school management experience with EduckPro",
   "icons": [
     {
       "src": "/images/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/images/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
-  "orientation": "portrait-primary"
+  "orientation": "any",
+  "scope": "/",
+  "categories": ["education", "productivity"]
 }

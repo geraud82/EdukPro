@@ -6,6 +6,7 @@ import SchoolInfo from './components/SchoolInfo';
 import SchoolBrowser from './components/SchoolBrowser';
 import StudentEnrollmentForm from './components/StudentEnrollmentForm';
 import Notifications from './components/Notifications';
+import HomePage from './components/HomePage';
 import { API_URL } from './utils/config';
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
     <BrowserRouter>
       <div className="app-container">
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/parent/*" element={<ParentLayout />} />
