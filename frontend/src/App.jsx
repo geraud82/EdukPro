@@ -426,7 +426,17 @@ function SignUpPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/auth/register`, {
+      const apiUrl = `${API_URL}/api/auth/register`;
+      console.log('🔵 [SIGNUP] Starting registration...');
+      console.log('🔵 [SIGNUP] API URL:', apiUrl);
+      console.log('🔵 [SIGNUP] Request data:', {
+        name: formData.name,
+        email: formData.email,
+        role: formData.role,
+        password: '***hidden***'
+      });
+
+      const res = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -437,11 +447,18 @@ function SignUpPage() {
         }),
       });
 
+      console.log('🔵 [SIGNUP] Response status:', res.status, res.statusText);
+
       const data = await res.json();
+      console.log('🔵 [SIGNUP] Response data:', data);
 
       if (!res.ok) {
+        console.error('🔴 [SIGNUP] Registration failed:', data.message || 'Unknown error');
         throw new Error(data.message || 'Registration failed');
       }
+
+      console.log('✅ [SIGNUP] Registration successful!');
+      console.log('✅ [SIGNUP] User role:', data.user.role);
 
       // Auto-login after successful registration
       localStorage.setItem('token', data.token);
@@ -454,6 +471,9 @@ function SignUpPage() {
       else navigate('/login');
 
     } catch (err) {
+      console.error('🔴 [SIGNUP] Error:', err);
+      console.error('🔴 [SIGNUP] Error message:', err.message);
+      console.error('🔴 [SIGNUP] Error stack:', err.stack);
       setError(err.message);
     } finally {
       setLoading(false);
