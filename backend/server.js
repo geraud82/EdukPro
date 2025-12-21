@@ -58,34 +58,33 @@ const upload = multer({
 });
 
 // Middleware
-app.use(express.json());
+import cors from "cors";
 
-// CORS configuration for production and development
 const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:4000',
-  'https://eduk-pro.vercel.app',
-  'https://edukpro.vercel.app',
-  'https://edukpro-m7vvl1912-geraud82s-projects.vercel.app',
-  process.env.FRONTEND_URL
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:4000",
+  "https://eduk-pro.vercel.app",
+  "https://edukpro.vercel.app",
+  "https://edukpro-m7vl1912-geraud82s-projects.vercel.app",
 ].filter(Boolean);
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true
-  })
-);
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow server-to-server, Postman, mobile apps
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    console.error("CORS blocked origin:", origin);
+    return callback(null, false); // IMPORTANT
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
 
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

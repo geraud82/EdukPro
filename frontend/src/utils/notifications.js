@@ -53,19 +53,24 @@ export async function subscribeToPushNotifications() {
     let subscription = await registration.pushManager.getSubscription();
     
     if (!subscription) {
-      // Fetch VAPID public key from backend
+    // Fetch VAPID public key from backend
       let vapidPublicKey;
       try {
         const response = await fetch(`${API_URL}/api/push/vapid-public-key`);
+        if (!response.ok) {
+          console.log('Push notifications not enabled on server (endpoint unavailable)');
+          return null;
+        }
         const data = await response.json();
         vapidPublicKey = data.publicKey;
       } catch (error) {
-        console.error('Failed to fetch VAPID public key:', error);
+        // Silently fail - push notifications not configured
+        console.log('Push notifications not available');
         return null;
       }
       
       if (!vapidPublicKey) {
-        console.error('No VAPID public key received from server');
+        console.log('Push notifications not enabled (no VAPID key configured on server)');
         return null;
       }
       

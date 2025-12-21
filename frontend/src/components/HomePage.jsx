@@ -223,6 +223,14 @@ function HomePage() {
               Streamline operations, enhance communication, and focus on what matters most - education.
             </p>
             
+            {/* Mobile Hero Image */}
+            <div className="hero-image-mobile">
+              <img 
+                src="/images/hero-background.png" 
+                alt="School Management Illustration" 
+                className="hero-img-mobile"
+              />
+            </div>
 
             <div className="hero-buttons">
               <button onClick={() => navigate('/signup')} className="hero-btn hero-btn-primary">

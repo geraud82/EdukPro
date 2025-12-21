@@ -283,7 +283,6 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #faf5ff 100%);
   overflow: hidden;
-  
 }
 
 .hero-section-wrapper::before {
@@ -293,7 +292,7 @@
   right: 2rem;
   width: 45%;
   height: 100%;
-
+  background-image: url('/images/hero-background.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -312,7 +311,6 @@
   max-width: 1200px;
   margin: 0 auto;
   overflow: hidden;
-  background-image: url('/images/hero-background.png');
 }
 
 .hero-content {
@@ -423,6 +421,18 @@
   color: #6b7280;
   margin-bottom: 2rem;
   max-width: 520px;
+}
+
+/* Mobile Hero Image - Hidden on desktop */
+.hero-image-mobile {
+  display: none;
+}
+
+.hero-img-mobile {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  object-fit: contain;
 }
 
 .hero-buttons {
@@ -1154,7 +1164,7 @@
 
   /* Hide desktop hero image on mobile, show mobile version */
   .hero-image {
-    display: none;
+    display: block;
   }
 
   .hero-image-mobile {
@@ -1202,6 +1212,29 @@
 }
 
 @media (max-width: 768px) {
+  /* Hide desktop background image on mobile */
+  .hero-section-wrapper::before {
+    display: none;
+  }
+
+  /* Show mobile hero image */
+  .hero-image-mobile {
+    display: block;
+    text-align: center;
+    margin: 1.5rem 0;
+  }
+
+  .hero-img-mobile {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    border-radius: 1rem;
+  }
+
+  .hero-content {
+    text-align: center;
+  }
+
   /* Mobile Navigation */
   .nav-links {
     display: none;
@@ -1237,10 +1270,13 @@
 
   .hero-description {
     font-size: 1rem;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .hero-buttons {
     flex-direction: column;
+    justify-content: center;
   }
 
   .hero-btn {
