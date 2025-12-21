@@ -5,6 +5,7 @@ import './HomePage.css';
 function HomePage() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
 
@@ -15,6 +16,27 @@ function HomePage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (mobileMenuOpen && !e.target.closest('.nav-container')) {
+        setMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [mobileMenuOpen]);
+
+  // Close mobile menu on navigation
+  const handleNavClick = (path) => {
+    setMobileMenuOpen(false);
+    navigate(path);
+  };
+
+  const handleAnchorClick = () => {
+    setMobileMenuOpen(false);
+  };
 
   // PWA Install Handler
   useEffect(() => {
@@ -118,12 +140,33 @@ function HomePage() {
   return (
     <div className="homepage">
       {/* Navigation */}
-      <nav className={`homepage-nav ${scrolled ? 'scrolled' : ''}`}>
+      <nav className={`homepage-nav ${scrolled ? 'scrolled' : ''} ${mobileMenuOpen ? 'menu-open' : ''}`}>
         <div className="nav-container">
           <div className="nav-logo">
             <span className="logo-icon">🎓</span>
             <span className="logo-text">EduckPro</span>
           </div>
+          
+          {/* Mobile: Get Started button and Hamburger menu */}
+          <div className="nav-mobile-actions">
+            <button onClick={() => handleNavClick('/signup')} className="nav-btn nav-btn-signup nav-btn-mobile">
+              Get Started
+            </button>
+            <button 
+              className={`hamburger-btn ${mobileMenuOpen ? 'open' : ''}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+              aria-label="Toggle menu"
+            >
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+            </button>
+          </div>
+
+          {/* Desktop navigation */}
           <div className="nav-links">
             <a href="#features" className="nav-link">Features</a>
             <a href="#benefits" className="nav-link">Benefits</a>
@@ -135,77 +178,79 @@ function HomePage() {
               Get Started
             </button>
           </div>
+
+          {/* Mobile menu dropdown */}
+          <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+            <a href="#features" className="mobile-menu-link" onClick={handleAnchorClick}>
+              <span className="mobile-menu-icon">🚀</span>
+              Features
+            </a>
+            <a href="#benefits" className="mobile-menu-link" onClick={handleAnchorClick}>
+              <span className="mobile-menu-icon">💎</span>
+              Benefits
+            </a>
+            <a href="#about" className="mobile-menu-link" onClick={handleAnchorClick}>
+              <span className="mobile-menu-icon">🏢</span>
+              About
+            </a>
+            <div className="mobile-menu-divider"></div>
+            <button onClick={() => handleNavClick('/login')} className="mobile-menu-btn mobile-menu-btn-login">
+              <span className="mobile-menu-icon">🔐</span>
+              Login
+            </button>
+            <button onClick={() => handleNavClick('/signup')} className="mobile-menu-btn mobile-menu-btn-signup">
+              <span className="mobile-menu-icon">✨</span>
+              Create Account
+            </button>
+          </div>
         </div>
       </nav>
 
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && <div className="mobile-menu-overlay" onClick={() => setMobileMenuOpen(false)}></div>}
+
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-background">
-          <div className="hero-shape hero-shape-1"></div>
-          <div className="hero-shape hero-shape-2"></div>
-          <div className="hero-shape hero-shape-3"></div>
-        </div>
-        <div className="hero-content">
-          <h1 className="hero-title">
-            Transform Your School
-            <br />
-            <span className="hero-title-gradient">Management Experience</span>
-          </h1>
-          <p className="hero-description">
-            EduckPro is the all-in-one solution for schools, teachers, and parents.
-            Streamline operations, enhance communication, and focus on what matters most - education.
-          </p>
-          <div className="hero-buttons">
-            <button onClick={() => navigate('/signup')} className="hero-btn hero-btn-primary">
-              <span>Get Started Free</span>
-              <span className="btn-arrow">→</span>
-            </button>
-            <button onClick={() => navigate('/login')} className="hero-btn hero-btn-secondary">
-              <span className="btn-icon">🔐</span>
-              <span>Sign In</span>
-            </button>
-            {showInstallButton && (
-              <button onClick={handleInstallClick} className="hero-btn hero-btn-install">
-                <span className="btn-icon">📱</span>
-                <span>Install App</span>
+      <div className="hero-section-wrapper">
+        <section className="hero-section">
+          <div className="hero-content">
+            <h1 className="hero-title">
+              Transform Your School
+              <br />
+              <span className="hero-title-gradient">Management Experience</span>
+            </h1>
+            <p className="hero-description">
+              EduckPro is the all-in-one solution for schools, teachers, and parents.
+              Streamline operations, enhance communication, and focus on what matters most - education.
+            </p>
+            
+
+            <div className="hero-buttons">
+              <button onClick={() => navigate('/signup')} className="hero-btn hero-btn-primary">
+                <span>Get Started Free</span>
+                <span className="btn-arrow">→</span>
               </button>
-            )}
-          </div>
-          <div className="hero-stats">
-            {stats.map((stat, index) => (
-              <div key={index} className="hero-stat">
-                <div className="stat-number">{stat.number}</div>
-                <div className="stat-label">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="hero-image">
-          <div className="hero-image-container">
-            <div className="hero-card hero-card-1">
-              <div className="card-icon">👨‍👩‍👧</div>
-              <div className="card-content">
-                <div className="card-title">Parent Portal</div>
-                <div className="card-subtitle">Track everything</div>
-              </div>
+              <button onClick={() => navigate('/login')} className="hero-btn hero-btn-secondary">
+                <span className="btn-icon">🔐</span>
+                <span>Sign In</span>
+              </button>
+              {showInstallButton && (
+                <button onClick={handleInstallClick} className="hero-btn hero-btn-install">
+                  <span className="btn-icon">📱</span>
+                  <span>Install App</span>
+                </button>
+              )}
             </div>
-            <div className="hero-card hero-card-2">
-              <div className="card-icon">📊</div>
-              <div className="card-content">
-                <div className="card-title">Analytics</div>
-                <div className="card-subtitle">Real-time insights</div>
-              </div>
-            </div>
-            <div className="hero-card hero-card-3">
-              <div className="card-icon">💰</div>
-              <div className="card-content">
-                <div className="card-title">Payments</div>
-                <div className="card-subtitle">Automated billing</div>
-              </div>
+            <div className="hero-stats">
+              {stats.map((stat, index) => (
+                <div key={index} className="hero-stat">
+                  <div className="stat-number">{stat.number}</div>
+                  <div className="stat-label">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* Features Section */}
       <section id="features" className="features-section">
@@ -291,6 +336,67 @@ function HomePage() {
               <div className="visual-card visual-card-small visual-card-bottom">
                 <div className="small-icon">💬</div>
                 <div className="small-text">3 new messages</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="about-section">
+        <div className="section-container">
+          <div className="about-content">
+            <div className="about-image">
+              <div className="about-image-container">
+                <div className="about-card about-card-main">
+                  <div className="about-icon">🎯</div>
+                  <div className="about-card-content">
+                    <h4>Our Mission</h4>
+                    <p>Empowering educational institutions with modern tools</p>
+                  </div>
+                </div>
+                <div className="about-card about-card-float about-card-1">
+                  <span className="about-stat">10+</span>
+                  <span className="about-stat-label">Years Experience</span>
+                </div>
+                <div className="about-card about-card-float about-card-2">
+                  <span className="about-stat">24/7</span>
+                  <span className="about-stat-label">Support</span>
+                </div>
+              </div>
+            </div>
+            <div className="about-text">
+              <div className="section-badge">
+                <span>🏢</span>
+                <span>About Us</span>
+              </div>
+              <h2 className="section-title">Transforming Education Management</h2>
+              <p className="about-description">
+                EduckPro was founded with a simple mission: to make school management 
+                effortless for administrators, engaging for teachers, and transparent for parents.
+              </p>
+              <p className="about-description">
+                Our platform is built by educators, for educators. We understand the unique 
+                challenges faced by schools and have developed solutions that address real-world 
+                needs while being intuitive and easy to use.
+              </p>
+              <div className="about-highlights">
+                <div className="about-highlight">
+                  <span className="highlight-icon">✓</span>
+                  <span>Trusted by 50+ schools worldwide</span>
+                </div>
+                <div className="about-highlight">
+                  <span className="highlight-icon">✓</span>
+                  <span>Dedicated customer success team</span>
+                </div>
+                <div className="about-highlight">
+                  <span className="highlight-icon">✓</span>
+                  <span>Regular updates and new features</span>
+                </div>
+                <div className="about-highlight">
+                  <span className="highlight-icon">✓</span>
+                  <span>99.9% uptime guarantee</span>
+                </div>
               </div>
             </div>
           </div>
