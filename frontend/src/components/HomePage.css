@@ -283,6 +283,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #faf5ff 100%);
   overflow: hidden;
+
 }
 
 .hero-section-wrapper::before {
@@ -292,7 +293,6 @@
   right: 2rem;
   width: 45%;
   height: 100%;
-  background-image: url('/images/hero-background.png');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -311,6 +311,8 @@
   max-width: 1200px;
   margin: 0 auto;
   overflow: hidden;
+  background-image: url('/images/hero-background.png');
+     
 }
 
 .hero-content {
@@ -322,7 +324,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  right: 20 px;
+  right: 0;
   bottom: 0;
   z-index: 0;
   overflow: hidden;
@@ -351,6 +353,7 @@
   bottom: -200px;
   left: -200px;
   animation-delay: -5s;
+ 
 }
 
 .hero-shape-3 {
@@ -550,6 +553,7 @@
   align-items: center;
   justify-content: center;
   min-height: 500px;
+  background-image: url('/images/hero-background.png');
 }
 
 .hero-image-container {
