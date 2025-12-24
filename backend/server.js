@@ -19,33 +19,44 @@ const prisma = new PrismaClient();
 /* =========================
    🔐 CORS CONFIG (CRITICAL)
 ========================= */
+/* =========================
+   🔐 CORS CONFIG (FIXED)
+========================= */
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
-  'http://localhost:4000',
   'https://eduk-pro.vercel.app',
   'https://edukpro.vercel.app',
-  'https://edukpro-m7vl1912-geraud82s-projects.vercel.app',
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow server-to-server, Postman, mobile apps
     if (!origin) return callback(null, true);
+
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
+
     console.error('❌ CORS blocked:', origin);
-    return callback(null, false);
+    return callback(new Error('Not allowed by CORS'));
   },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
 
-// 🔥 REQUIRED for preflight
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // ✅ MUST use same config
 
-// JSON after CORS
-app.use(express.json());
+
+app.use((req, res, next) => {
+  if (req.headers.origin && allowedOrigins.includes(req.headers.origin)) {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  }
+  next();
+});
+
 
 /* =========================
    📂 UPLOADS
