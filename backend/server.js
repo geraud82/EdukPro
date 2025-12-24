@@ -47,7 +47,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // ✅ MUST use same config
+app.options('/*', cors(corsOptions)); // ✅ MUST use same config
 
 
 app.use((req, res, next) => {
