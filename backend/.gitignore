@@ -1,8 +1,14 @@
 node_modules
 # Keep environment variables out of version control
 .env
+.env.production
+.env.local
 
 /generated/prisma
+
+# Logs
+logs/
+*.log
 
 # Uploaded files (don't commit to Git)
 uploads/

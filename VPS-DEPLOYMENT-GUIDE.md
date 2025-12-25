@@ -211,6 +211,70 @@ VITE_VAPID_PUBLIC_KEY=your-vapid-public-key
 npm run build
 ```
 
+## Frontend-Backend Communication Setup
+
+### Important: CORS Configuration
+
+For the frontend and backend to communicate properly, you must configure CORS on both local development and VPS:
+
+#### Local Development
+
+1. **Backend `.env`** - Add localhost origins:
+```env
+ALLOWED_ORIGINS=http://localhost:5173,http://localhost:5174,http://localhost:3000
+```
+
+2. **Frontend `.env.local`** - Point to local backend:
+```env
+VITE_API_URL=http://localhost:4000
+```
+
+3. The Vite dev server has a proxy configured to forward `/api` requests to avoid CORS issues.
+
+#### VPS Production
+
+1. **Backend `.env`** - Add your production domains:
+```env
+ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com,https://app.yourdomain.com
+```
+
+2. **Frontend `.env`** - Point to API subdomain:
+```env
+VITE_API_URL=https://api.yourdomain.com
+```
+
+### Subdomain vs Single Domain Setup
+
+**Subdomain Setup (Recommended):**
+- Frontend: `https://yourdomain.com`
+- Backend API: `https://api.yourdomain.com`
+
+**Single Domain Setup (Alternative):**
+- Frontend: `https://yourdomain.com`
+- Backend API: `https://yourdomain.com/api` (requires Nginx proxy)
+
+For single domain setup, uncomment the alternative configuration in `nginx.conf`.
+
+### Testing Communication
+
+After deployment, test the API connection:
+
+```bash
+# Test from server
+curl https://api.yourdomain.com
+# Expected: {"status":"EduckPro API running"}
+
+# Test from browser console
+fetch('https://api.yourdomain.com/api/auth/login', {method: 'OPTIONS'})
+```
+
+### Socket.IO (WebSocket) Configuration
+
+The backend uses Socket.IO for real-time features. Ensure:
+1. Nginx WebSocket upgrade headers are configured (included in `nginx.conf`)
+2. CORS origins include WebSocket connections
+3. Client connects with the same API URL
+
 ## 5. Setup PM2 Process Manager
 
 ### Start backend with PM2
