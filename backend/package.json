@@ -5,13 +5,15 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "prisma:migrate": "npx prisma migrate dev --schema=../database/schema.prisma",
-    "prisma:studio": "npx prisma studio --schema=../database/schema.prisma",
-    "prisma:generate": "npx prisma generate --schema=../database/schema.prisma",
-    "db:seed": "npx prisma db seed"
-  },
+  "postinstall": "prisma generate --schema=../database/schema.prisma",
+  "start": "node server.js",
+  "dev": "nodemon server.js",
+  "prisma:migrate": "npx prisma migrate dev --schema=../database/schema.prisma",
+  "prisma:studio": "npx prisma studio --schema=../database/schema.prisma",
+  "prisma:generate": "npx prisma generate --schema=../database/schema.prisma",
+  "db:seed": "npx prisma db seed --schema=../database/schema.prisma"
+},
+
   "keywords": [],
   "author": "",
   "license": "ISC",
