@@ -17,17 +17,22 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 /* =========================
-   🔐 CORS CONFIG (CRITICAL)
+   🔐 CORS CONFIG (VPS PRODUCTION)
 ========================= */
-/* =========================
-   🔐 CORS CONFIG (FIXED)
-========================= */
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'https://eduk-pro.vercel.app',
-  'https://edukpro.vercel.app',
-];
+// Get allowed origins from environment variable or use defaults for development
+const getAllowedOrigins = () => {
+  if (process.env.ALLOWED_ORIGINS) {
+    return process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim());
+  }
+  // Default development origins
+  return [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:3000',
+  ];
+};
+
+const allowedOrigins = getAllowedOrigins();
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -47,8 +52,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-
 
 app.use((req, res, next) => {
   if (req.headers.origin && allowedOrigins.includes(req.headers.origin)) {

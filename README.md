@@ -57,20 +57,23 @@ A comprehensive school management system built with React, Node.js, Express, Pri
 - **Nodemailer** - Email service
 - **PDFKit** - PDF generation
 - **Web Push** - Push notifications
+- **PM2** - Process manager (production)
 
 ## 📋 Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 20+ and npm
 - PostgreSQL 14+
 - Git
+- Nginx (for production)
+- PM2 (for production)
 
 ## 🏃‍♂️ Quick Start (Development)
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/educkpro.git
-cd educkpro
+git clone https://github.com/geraud82/EdukPro.git
+cd EdukPro
 ```
 
 ### 2. Set Up Backend
@@ -86,7 +89,7 @@ DATABASE_URL="postgresql://user:password@localhost:5432/educkpro"
 JWT_SECRET="your-secret-key-here"
 PORT=4000
 NODE_ENV=development
-FRONTEND_URL="http://localhost:5173"
+ALLOWED_ORIGINS="http://localhost:5173,http://localhost:5174"
 EMAIL_HOST="smtp.gmail.com"
 EMAIL_PORT=587
 EMAIL_USER="your-email@gmail.com"
@@ -155,33 +158,41 @@ Visit: http://localhost:5173
 - Email: `mike.parent@email.com`
 - Password: `password123`
 
-## 🚀 Deployment
+## 🚀 Production Deployment (VPS/Hostinger)
 
-### Deployment Guides
+For complete deployment instructions on a VPS server (Hostinger or similar), see:
 
-- **📋 Quick Start**: [VERCEL-DEPLOYMENT-CHECKLIST.md](./VERCEL-DEPLOYMENT-CHECKLIST.md) - 10-minute checklist
-- **📖 Detailed Vercel Guide**: [VERCEL-DEPLOYMENT-GUIDE.md](./VERCEL-DEPLOYMENT-GUIDE.md) - Complete Vercel documentation
-- **📖 Full Deployment**: [DEPLOYMENT.md](./DEPLOYMENT.md) - Vercel + Render complete setup
-- **🔧 Backend (Render)**: [RENDER-DEPLOYMENT-GUIDE.md](./RENDER-DEPLOYMENT-GUIDE.md) - Backend deployment
+**📖 [VPS-DEPLOYMENT-GUIDE.md](./VPS-DEPLOYMENT-GUIDE.md)**
 
-### Quick Deployment Summary
+### Quick Overview
 
-**Frontend to Vercel (5-10 minutes)**:
-1. Push code to GitHub
-2. Import project at https://vercel.com/new
-3. Set root directory to `frontend`
-4. Add environment variable: `VITE_API_URL`
-5. Deploy and copy URL
-6. Update backend CORS with Vercel URL
+1. **Server Setup**: Ubuntu 22.04 with Node.js, PostgreSQL, Nginx
+2. **Backend**: Runs with PM2 process manager on port 4000
+3. **Frontend**: Built and served by Nginx
+4. **SSL**: Let's Encrypt certificates
+5. **Database**: PostgreSQL on the same server
 
-**Backend to Render**:
-1. Create PostgreSQL database
-2. Deploy backend service
-3. Set environment variables
-4. Run `npx prisma db seed`
-5. Copy backend URL for frontend
+### Key Files
 
-**Ready to deploy?** Start with [VERCEL-DEPLOYMENT-CHECKLIST.md](./VERCEL-DEPLOYMENT-CHECKLIST.md)
+- `nginx.conf` - Nginx configuration template
+- `backend/ecosystem.config.js` - PM2 configuration
+- `backend/.env.example` - Backend environment template
+- `frontend/.env.example` - Frontend environment template
+
+### Quick Deploy Commands
+
+```bash
+# Build frontend
+cd frontend
+npm install
+npm run build
+
+# Setup backend with PM2
+cd backend
+npm install
+npx prisma migrate deploy
+pm2 start ecosystem.config.js --env production
+```
 
 ## 📚 Documentation
 
@@ -232,6 +243,7 @@ See `backend/prisma/schema.prisma` for the complete database schema.
 - SQL injection protection (Prisma)
 - XSS protection
 - HTTPS in production
+- Security headers (Nginx)
 
 ## 🎨 Customization
 
@@ -295,18 +307,11 @@ This project is licensed under the MIT License.
 
 ## 👥 Authors
 
-- Your Name - [GitHub](https://github.com/YOUR_USERNAME)
-
-## 🙏 Acknowledgments
-
-- React community
-- Prisma team
-- Express.js
-- Vercel and Render for hosting
+- Geraud - [GitHub](https://github.com/geraud82)
 
 ## 📧 Support
 
-For support, email support@educkpro.com or create an issue on GitHub.
+For support, create an issue on GitHub.
 
 ## 🗺️ Roadmap
 
@@ -327,37 +332,36 @@ For support, email support@educkpro.com or create an issue on GitHub.
 ```
 educkpro/
 ├── backend/
-│   ├── prisma/          # Database schema & migrations
-│   ├── services/        # Business logic (email, PDF, push)
-│   ├── uploads/         # File uploads
-│   ├── server.js        # Express server
+│   ├── prisma/              # Database schema & migrations
+│   ├── services/            # Business logic (email, PDF, push)
+│   ├── uploads/             # File uploads
+│   ├── server.js            # Express server
+│   ├── ecosystem.config.js  # PM2 configuration
 │   └── package.json
 ├── frontend/
-│   ├── public/          # Static assets
+│   ├── public/              # Static assets
 │   ├── src/
-│   │   ├── components/  # React components
-│   │   ├── utils/       # Utilities (notifications, etc)
-│   │   ├── config.js    # Configuration
-│   │   ├── App.jsx      # Main app component
-│   │   └── main.jsx     # Entry point
+│   │   ├── components/      # React components
+│   │   ├── utils/           # Utilities (notifications, etc)
+│   │   ├── config.js        # Configuration
+│   │   ├── App.jsx          # Main app component
+│   │   └── main.jsx         # Entry point
 │   └── package.json
-├── DEPLOYMENT.md        # Deployment guide
-├── README.md           # This file
-├── render.yaml         # Render configuration
-└── vercel.json         # Vercel configuration
+├── nginx.conf               # Nginx configuration template
+├── VPS-DEPLOYMENT-GUIDE.md  # Deployment guide
+└── README.md                # This file
 ```
 
 ## 🐛 Known Issues
 
-- Free tier backend (Render) sleeps after 15 min inactivity
 - Push notifications require HTTPS (works in production)
-- Email service requires Gmail App Password
+- Email service requires Gmail App Password or SMTP server
 
 ## 💡 Tips
 
 - Use Chrome DevTools → Application → Service Workers for PWA debugging
-- Check Render logs for backend errors
-- Use Vercel deployment logs for frontend issues
+- Check PM2 logs for backend errors: `pm2 logs educkpro-api`
+- Check Nginx logs: `tail -f /var/log/nginx/error.log`
 - Test push notifications in production (requires HTTPS)
 
 ---
