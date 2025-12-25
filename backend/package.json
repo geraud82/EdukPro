@@ -5,6 +5,7 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
+    "postinstall": "prisma generate",
     "start": "node server.js",
     "dev": "nodemon server.js",
     "prisma:migrate": "npx prisma migrate dev --schema=../database/schema.prisma",
@@ -33,4 +34,5 @@
     "schema": "../database/schema.prisma",
     "seed": "node ../database/seed.js"
   }
+  
 }
