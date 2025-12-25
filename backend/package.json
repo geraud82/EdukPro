@@ -7,8 +7,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "prisma:migrate": "npx prisma migrate dev",
-    "prisma:studio": "npx prisma studio",
+    "prisma:migrate": "npx prisma migrate dev --schema=../database/schema.prisma",
+    "prisma:studio": "npx prisma studio --schema=../database/schema.prisma",
+    "prisma:generate": "npx prisma generate --schema=../database/schema.prisma",
     "db:seed": "npx prisma db seed"
   },
   "keywords": [],
@@ -29,6 +30,7 @@
     "web-push": "^3.6.7"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "schema": "../database/schema.prisma",
+    "seed": "node ../database/seed.js"
   }
 }
