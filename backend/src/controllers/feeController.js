@@ -142,6 +142,31 @@ const getAllInvoices = asyncHandler(async (req, res) => {
 });
 
 /**
+ * Get my invoices (for parent users - invoices for their children)
+ * GET /api/invoices/my
+ */
+const getMyInvoices = asyncHandler(async (req, res) => {
+  // Only parents can access this route
+  if (req.user.role !== 'parent') {
+    throw new ApiError(403, 'This endpoint is only available for parents');
+  }
+
+  const invoices = await prisma.invoice.findMany({
+    where: {
+      student: { parentId: req.user.id }
+    },
+    include: {
+      student: { select: { id: true, firstName: true, lastName: true } },
+      fee: { select: { id: true, name: true, type: true } },
+      payments: true,
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  res.json(invoices);
+});
+
+/**
  * Get invoice by ID
  * GET /api/invoices/:id
  */
@@ -300,6 +325,7 @@ module.exports = {
   deleteFee,
   // Invoices
   getAllInvoices,
+  getMyInvoices,
   getInvoiceById,
   createInvoice,
   updateInvoice,

@@ -11,6 +11,7 @@ const { authMiddleware } = require('../middleware/auth');
 router.use(authMiddleware);
 
 router.get('/', studentController.getAllStudents);
+router.get('/my', studentController.getMyStudents);
 router.get('/:id', studentController.getStudentById);
 router.post('/', studentController.createStudent);
 router.patch('/:id', studentController.updateStudent);

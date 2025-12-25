@@ -51,6 +51,32 @@ const getAllStudents = asyncHandler(async (req, res) => {
 });
 
 /**
+ * Get my students (for parent users)
+ * GET /api/students/my
+ */
+const getMyStudents = asyncHandler(async (req, res) => {
+  // Only parents can access this route
+  if (req.user.role !== 'parent') {
+    throw new ApiError(403, 'This endpoint is only available for parents');
+  }
+
+  const students = await prisma.student.findMany({
+    where: { parentId: req.user.id },
+    include: {
+      school: { select: { id: true, name: true } },
+      enrollments: {
+        include: {
+          class: { select: { id: true, name: true } },
+        },
+      },
+    },
+    orderBy: { lastName: 'asc' },
+  });
+
+  res.json(students);
+});
+
+/**
  * Get student by ID
  * GET /api/students/:id
  */
@@ -216,6 +242,7 @@ const deleteStudent = asyncHandler(async (req, res) => {
 
 module.exports = {
   getAllStudents,
+  getMyStudents,
   getStudentById,
   createStudent,
   updateStudent,

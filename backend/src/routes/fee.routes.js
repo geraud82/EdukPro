@@ -18,6 +18,7 @@ router.delete('/fees/:id', requireAdmin, feeController.deleteFee);
 
 // Invoice routes
 router.get('/invoices', feeController.getAllInvoices);
+router.get('/invoices/my', feeController.getMyInvoices);
 router.get('/invoices/:id', feeController.getInvoiceById);
 router.post('/invoices', requireAdmin, feeController.createInvoice);
 router.patch('/invoices/:id', requireAdmin, feeController.updateInvoice);

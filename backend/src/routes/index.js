@@ -32,9 +32,34 @@ router.get('/profile', authMiddleware, authController.getProfile);
 router.patch('/profile', authMiddleware, authController.updateProfile);
 router.post('/profile/change-password', authMiddleware, authController.changePassword);
 
-// Push notifications (public)
+// Push notifications
+const pushService = require('../../services/pushService');
+
 router.get('/push/vapid-public-key', (req, res) => {
   res.json({ publicKey: process.env.VAPID_PUBLIC_KEY });
+});
+
+// Subscribe to push notifications (requires auth)
+router.post('/push/subscribe', authMiddleware, (req, res) => {
+  const { subscription } = req.body;
+  
+  if (!subscription) {
+    return res.status(400).json({ error: 'Subscription object is required' });
+  }
+  
+  const saved = pushService.saveSubscription(req.user.id, subscription);
+  
+  if (saved) {
+    res.json({ message: 'Push subscription saved successfully' });
+  } else {
+    res.status(503).json({ error: 'Push notifications are not enabled' });
+  }
+});
+
+// Unsubscribe from push notifications (requires auth)
+router.delete('/push/subscribe', authMiddleware, (req, res) => {
+  pushService.removeSubscription(req.user.id);
+  res.json({ message: 'Push subscription removed successfully' });
 });
 
 module.exports = router;
