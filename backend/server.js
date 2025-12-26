@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
 app.set('io', io);
 
 // Start server
-const PORT = config.port;
+const PORT = Number(process.env.PORT) || 3000;
 
 server.listen(PORT, '0.0.0.0', () => {
 
