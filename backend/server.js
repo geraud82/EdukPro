@@ -63,7 +63,8 @@ app.set('io', io);
 // Start server
 const PORT = config.port;
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
+
   console.log(`
 ╔════════════════════════════════════════════════╗
 ║                                                ║
