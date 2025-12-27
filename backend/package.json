@@ -4,6 +4,9 @@
   "description": "",
   "main": "server.js",
   "type": "commonjs",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "postinstall": "prisma generate",
     "start": "node server.js",
