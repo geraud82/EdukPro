@@ -99,7 +99,7 @@ export async function sendSubscriptionToBackend(subscription) {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
-      console.warn('No auth token found');
+      console.log('Push notifications: No auth token found');
       return false;
     }
 
@@ -112,14 +112,23 @@ export async function sendSubscriptionToBackend(subscription) {
       body: JSON.stringify(subscription)
     });
 
+    if (response.status === 401) {
+      // Token invalid/expired - silently fail
+      console.log('Push notifications: Authentication required');
+      return false;
+    }
+
     if (!response.ok) {
-      throw new Error('Failed to send subscription to server');
+      // Silently fail for other errors
+      console.log('Push notifications: Unable to send subscription to server');
+      return false;
     }
 
     console.log('Push subscription sent to server successfully');
     return true;
   } catch (error) {
-    console.error('Error sending subscription to backend:', error);
+    // Silently fail for network errors
+    console.log('Push notifications: Network error sending subscription');
     return false;
   }
 }

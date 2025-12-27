@@ -26,15 +26,18 @@ if ('serviceWorker' in navigator) {
             initializePushNotifications().then(success => {
               if (success) {
                 console.log('✅ Push notifications enabled');
-              } else {
-                console.log('❌ Push notifications not enabled');
               }
+              // Silently fail if not enabled - user may need to re-login
+            }).catch(() => {
+              // Silently fail for any errors
+              console.log('Push notifications: initialization skipped');
             });
           }, 1000);
         }
       })
       .catch(err => {
-        console.error('Service worker registration failed:', err);
+        // Silently log service worker registration issues
+        console.log('Service worker registration skipped:', err.message);
       });
   });
 }

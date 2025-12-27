@@ -1374,7 +1374,6 @@ function ParentLayout() {
         setLoadingStudents(true);
         const token = localStorage.getItem('token');
         if (!token) {
-          setStudentError('Not logged in');
           setLoadingStudents(false);
           return;
         }
@@ -1385,6 +1384,13 @@ function ParentLayout() {
           },
         });
 
+        if (res.status === 401) {
+          // Token invalid/expired - silently fail
+          console.log('Students: Authentication required');
+          setLoadingStudents(false);
+          return;
+        }
+
         const data = await res.json();
 
         if (!res.ok) {
@@ -1393,7 +1399,8 @@ function ParentLayout() {
 
         setStudents(data);
       } catch (err) {
-        setStudentError(err.message);
+        // Silently fail for network errors
+        console.log('Students: Unable to load', err.message);
       } finally {
         setLoadingStudents(false);
       }
@@ -1414,7 +1421,6 @@ function ParentLayout() {
         setLoadingInvoices(true);
         const token = localStorage.getItem('token');
         if (!token) {
-          setInvoiceError('Not logged in');
           setLoadingInvoices(false);
           return;
         }
@@ -1425,6 +1431,13 @@ function ParentLayout() {
           },
         });
 
+        if (res.status === 401) {
+          // Token invalid/expired - silently fail
+          console.log('Invoices: Authentication required');
+          setLoadingInvoices(false);
+          return;
+        }
+
         const data = await res.json();
 
         if (!res.ok) {
@@ -1433,7 +1446,8 @@ function ParentLayout() {
 
         setInvoices(data);
       } catch (err) {
-        setInvoiceError(err.message);
+        // Silently fail for network errors
+        console.log('Invoices: Unable to load', err.message);
       } finally {
         setLoadingInvoices(false);
       }

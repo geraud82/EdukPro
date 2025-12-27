@@ -26,9 +26,13 @@ function Notifications() {
         const data = await response.json();
         setNotifications(data);
         setUnreadCount(data.filter(n => !n.isRead).length);
+      } else if (response.status === 401) {
+        // Token invalid/expired - silently fail (user should re-login)
+        console.log('Notifications: Authentication required');
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      // Silently fail for network errors
+      console.log('Notifications: Unable to fetch notifications');
     }
   };
 
@@ -46,9 +50,13 @@ function Notifications() {
       if (response.ok) {
         const data = await response.json();
         setUnreadCount(data.count);
+      } else if (response.status === 401) {
+        // Token invalid/expired - silently fail
+        console.log('Notifications: Authentication required');
       }
     } catch (error) {
-      console.error('Error fetching unread count:', error);
+      // Silently fail for network errors
+      console.log('Notifications: Unable to fetch unread count');
     }
   };
 
