@@ -5,8 +5,10 @@ export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current working directory.
   const env = loadEnv(mode, process.cwd(), '')
   
-  // Get API URL from environment or use default
-  const apiUrl = env.VITE_API_URL || 'http://localhost:4000'
+  // For the vite dev server proxy, ALWAYS use localhost backend
+  // This prevents the recursive /api/api/api... issue when VITE_API_URL 
+  // points to production and nginx doesn't have /api location configured
+  const localBackendUrl = 'http://localhost:4000'
   
   return {
     base: '/',
@@ -16,24 +18,22 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 5173,
-      // Proxy configuration for local development
-      // This helps avoid CORS issues during development
+      // Proxy configuration for local development ONLY
+      // Always proxy to local backend - never to production URL
       proxy: {
         '/api': {
-          target: apiUrl,
+          target: localBackendUrl,
           changeOrigin: true,
           secure: false,
-          // Uncomment below to rewrite the path if needed
-          // rewrite: (path) => path.replace(/^\/api/, '/api'),
         },
         '/uploads': {
-          target: apiUrl,
+          target: localBackendUrl,
           changeOrigin: true,
           secure: false,
         },
         // WebSocket proxy for Socket.IO
         '/socket.io': {
-          target: apiUrl,
+          target: localBackendUrl,
           changeOrigin: true,
           ws: true,
         },

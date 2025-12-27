@@ -6,13 +6,16 @@ const isDevelopment = import.meta.env.DEV;
 const isProduction = import.meta.env.PROD;
 
 // ✅ SINGLE SOURCE OF TRUTH
-const API_URL = import.meta.env.VITE_API_URL || (
-  isDevelopment ? 'http://localhost:4000' : ''
-);
+// In DEVELOPMENT: Use empty string so requests go through vite's proxy
+// This prevents the /api/api/api... recursive loop issue
+// In PRODUCTION: Use the configured VITE_API_URL
+const API_URL = isDevelopment 
+  ? ''  // Empty string = relative URLs, handled by vite proxy
+  : (import.meta.env.VITE_API_URL || '');
 
 if (!API_URL && isProduction) {
-  console.error(
-    '❌ VITE_API_URL is missing in production build'
+  console.warn(
+    '⚠️ VITE_API_URL is not set in production. API calls will use relative URLs.'
   );
 }
 
