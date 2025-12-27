@@ -1,6 +1,7 @@
 # Nixpacks configuration for frontend
+# Using Node.js 22 because Vite 7 requires Node.js 20.19+ or 22.12+
 [phases.setup]
-nixPkgs = ["nodejs_20"]
+nixPkgs = ["nodejs_22"]
 
 [phases.install]
 cmds = ["npm ci"]

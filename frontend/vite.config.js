@@ -41,6 +41,8 @@ export default defineConfig(({ mode }) => {
     },
     preview: {
       port: 4173,
+      host: true,
+      allowedHosts: ['educkpro.com', 'www.educkpro.com', 'localhost'],
     },
     // Define environment variables available at build time
     define: {
