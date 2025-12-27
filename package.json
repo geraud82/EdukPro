@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "nodemon": "^3.1.11",
     "prisma": "^6.19.1"
   },
   "dependencies": {

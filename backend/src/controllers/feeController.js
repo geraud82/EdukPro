@@ -14,12 +14,11 @@ const prisma = new PrismaClient();
  * GET /api/fees
  */
 const getAllFees = asyncHandler(async (req, res) => {
-  const { schoolId, type } = req.query;
+  const { schoolId } = req.query;
   
   let where = {};
   
   if (schoolId) where.schoolId = Number(schoolId);
-  if (type) where.type = type;
   
   // Filter by user's school
   if (['admin', 'teacher'].includes(req.user.role) && req.user.schoolId) {
@@ -42,7 +41,7 @@ const getAllFees = asyncHandler(async (req, res) => {
  * POST /api/fees
  */
 const createFee = asyncHandler(async (req, res) => {
-  const { name, amount, currency, type, description, schoolId } = req.body;
+  const { name, amount, currency, description, schoolId } = req.body;
 
   if (!name || !amount || !schoolId) {
     throw new ApiError(400, 'Name, amount, and schoolId are required');
@@ -53,7 +52,6 @@ const createFee = asyncHandler(async (req, res) => {
       name,
       amount: Number(amount),
       currency: currency || 'XOF',
-      type: type || 'other',
       description,
       schoolId: Number(schoolId),
     },
@@ -71,7 +69,7 @@ const createFee = asyncHandler(async (req, res) => {
  */
 const updateFee = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, amount, currency, type, description } = req.body;
+  const { name, amount, currency, description } = req.body;
 
   const fee = await prisma.fee.update({
     where: { id: Number(id) },
@@ -79,7 +77,6 @@ const updateFee = asyncHandler(async (req, res) => {
       ...(name && { name }),
       ...(amount !== undefined && { amount: Number(amount) }),
       ...(currency && { currency }),
-      ...(type && { type }),
       ...(description !== undefined && { description }),
     },
     include: {
@@ -132,7 +129,7 @@ const getAllInvoices = asyncHandler(async (req, res) => {
     where,
     include: {
       student: { select: { id: true, firstName: true, lastName: true } },
-      fee: { select: { id: true, name: true, type: true } },
+      fee: { select: { id: true, name: true, amount: true } },
       payments: true,
     },
     orderBy: { createdAt: 'desc' },
@@ -157,7 +154,7 @@ const getMyInvoices = asyncHandler(async (req, res) => {
     },
     include: {
       student: { select: { id: true, firstName: true, lastName: true } },
-      fee: { select: { id: true, name: true, type: true } },
+      fee: { select: { id: true, name: true, amount: true } },
       payments: true,
     },
     orderBy: { createdAt: 'desc' },
@@ -217,7 +214,7 @@ const createInvoice = asyncHandler(async (req, res) => {
     },
     include: {
       student: { select: { id: true, firstName: true, lastName: true } },
-      fee: { select: { id: true, name: true, type: true } },
+      fee: { select: { id: true, name: true, amount: true } },
     },
   });
 
@@ -241,7 +238,7 @@ const updateInvoice = asyncHandler(async (req, res) => {
     },
     include: {
       student: { select: { id: true, firstName: true, lastName: true } },
-      fee: { select: { id: true, name: true, type: true } },
+      fee: { select: { id: true, name: true, amount: true } },
       payments: true,
     },
   });
