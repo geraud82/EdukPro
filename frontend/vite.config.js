@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 5173,
+      host: true,    // Listen on all network interfaces (0.0.0.0)
       // Proxy configuration for local development ONLY
       // Always proxy to local backend - never to production URL
       proxy: {

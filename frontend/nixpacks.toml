@@ -13,4 +13,5 @@ cmds = ["npm run build", "npm install -g serve"]
 # Use 'serve' for production instead of 'vite preview'
 # This serves static files without any proxy configuration
 # API requests should go directly to backend via VITE_API_URL
-cmd = "serve -s dist -l ${PORT:-3000}"
+# Important: Listen on 0.0.0.0 (all interfaces) for Dokploy/Docker compatibility
+cmd = "serve -s dist -l tcp://0.0.0.0:${PORT:-3000}"
