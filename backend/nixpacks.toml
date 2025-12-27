@@ -1,9 +1,11 @@
 # Nixpacks configuration for backend
 [phases.setup]
-nixPkgs = ["nodejs_20", "openssl"]
+nixPkgs = ["nodejs_20", "openssl", "libc", "gcc", "python3"]
 
 [phases.install]
-cmds = ["npm ci"]
+# Use npm install instead of npm ci, and skip the postinstall script
+# Then run prisma generate separately
+cmds = ["npm install --ignore-scripts"]
 
 [phases.build]
 cmds = ["npx prisma generate"]
