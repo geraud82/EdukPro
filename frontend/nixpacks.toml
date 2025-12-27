@@ -7,11 +7,11 @@ nixPkgs = ["nodejs_22"]
 cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["npm run build", "npm install -g serve"]
+cmds = ["npm run build"]
 
 [start]
-# Use 'serve' for production instead of 'vite preview'
+# Use 'npx serve' for production instead of 'vite preview'
 # This serves static files without any proxy configuration
 # API requests should go directly to backend via VITE_API_URL
 # Important: Listen on 0.0.0.0 (all interfaces) for Dokploy/Docker compatibility
-cmd = "serve -s dist -l tcp://0.0.0.0:${PORT:-3000}"
+cmd = "npx serve -s dist -l tcp://0.0.0.0:${PORT:-3000}"
