@@ -1,6 +1,6 @@
 # Nixpacks configuration for backend
 [phases.setup]
-nixPkgs = ["nodejs_20", "openssl", "libc", "gcc", "python3"]
+nixPkgs = ["nodejs_20", "openssl", "gcc", "python3"]
 
 [phases.install]
 # Use npm install instead of npm ci, and skip the postinstall script
