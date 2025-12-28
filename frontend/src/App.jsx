@@ -249,11 +249,20 @@ function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
 
-      if (!res.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
+// Vérifie que la réponse est bien du JSON
+let data;
+try {
+  data = JSON.parse(text);
+} catch (e) {
+  console.error('Non-JSON response:', text);
+  throw new Error('Server error: invalid response');
+}
+
+if (!res.ok) {
+  throw new Error(data.message || 'Login failed');
+}
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));

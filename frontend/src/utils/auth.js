@@ -117,3 +117,5 @@ export async function validateToken() {
     return false;
   }
 }
+console.log('LOGIN URL:', API_ENDPOINTS.login);
+
