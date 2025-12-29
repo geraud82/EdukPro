@@ -170,6 +170,7 @@ function HomePage() {
           <div className="nav-links">
             <a href="#features" className="nav-link">Features</a>
             <a href="#benefits" className="nav-link">Benefits</a>
+            <button onClick={() => navigate('/pricing')} className="nav-link" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Pricing</button>
             <a href="#about" className="nav-link">About</a>
             <button onClick={() => navigate('/login')} className="nav-btn nav-btn-login">
               Login

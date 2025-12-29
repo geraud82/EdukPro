@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { API_URL } from '../utils/config';
 import './OwnerDashboard.css';
 
@@ -9,6 +9,11 @@ function OwnerDashboard() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Refs for sections
+  const analyticsRef = useRef(null);
+  const schoolsRef = useRef(null);
+  const usersRef = useRef(null);
   
   // Filters
   const [userFilters, setUserFilters] = useState({
@@ -30,6 +35,28 @@ function OwnerDashboard() {
   useEffect(() => {
     loadAnalytics();
   }, [analyticsPeriod]);
+
+  // Handle hash navigation
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.substring(1);
+      
+      if (hash === 'analytics' && analyticsRef.current) {
+        analyticsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (hash === 'schools' && schoolsRef.current) {
+        schoolsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (hash === 'users' && usersRef.current) {
+        usersRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    // Handle initial hash
+    handleHashChange();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [analytics, schools, users]);
 
   async function loadDashboardStats() {
     try {
@@ -214,7 +241,7 @@ function OwnerDashboard() {
 
       {/* Analytics Section */}
       {analytics && (
-        <div className="card dashboard-card">
+        <div ref={analyticsRef} id="analytics" className="card dashboard-card">
           <div className="card-header-with-controls">
             <h3 className="card-title">
               <span>📈</span> Platform Analytics
@@ -308,17 +335,36 @@ function OwnerDashboard() {
           <span>⚡</span> Quick Actions
         </h3>
         <div className="quick-actions">
-          <button className="action-button" onClick={() => window.location.hash = '#users'}>
-            <span className="action-icon">➕</span>
-            <span className="action-label">Create User</span>
-          </button>
-          <button className="action-button" onClick={() => window.location.hash = '#schools'}>
-            <span className="action-icon">🏫</span>
-            <span className="action-label">View Schools</span>
-          </button>
-          <button className="action-button" onClick={() => window.location.hash = '#analytics'}>
+          <button 
+            className="action-button" 
+            onClick={() => {
+              if (analyticsRef.current) {
+                window.location.hash = '#analytics';
+              }
+            }}
+          >
             <span className="action-icon">📊</span>
             <span className="action-label">View Analytics</span>
+          </button>
+          <button 
+            className="action-button" 
+            onClick={() => {
+              // Scroll to top for user management
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            <span className="action-icon">👥</span>
+            <span className="action-label">Manage Users</span>
+          </button>
+          <button 
+            className="action-button" 
+            onClick={() => {
+              // Scroll to top for school management
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            <span className="action-icon">🏫</span>
+            <span className="action-label">Manage Schools</span>
           </button>
           <button className="action-button" onClick={loadDashboardStats}>
             <span className="action-icon">🔄</span>
