@@ -7,6 +7,7 @@ import SchoolBrowser from './components/SchoolBrowser';
 import StudentEnrollmentForm from './components/StudentEnrollmentForm';
 import Notifications from './components/Notifications';
 import HomePage from './components/HomePage';
+import OwnerDashboard from './components/OwnerDashboard';
 import { API_URL } from './utils/config';
 
 function App() {
@@ -723,6 +724,24 @@ function OwnerLayout() {
     }
   }, []);
 
+  // Sync tab state with URL hash
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash && ['dashboard', 'schools', 'users', 'analytics', 'profile'].includes(hash)) {
+      setTab(hash);
+    }
+
+    const handleHashChange = () => {
+      const newHash = window.location.hash.replace('#', '');
+      if (newHash && ['dashboard', 'schools', 'users', 'analytics', 'profile'].includes(newHash)) {
+        setTab(newHash);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   // Load schools
   useEffect(() => {
     async function fetchSchools() {
@@ -878,6 +897,27 @@ function OwnerLayout() {
     }
   }
 
+  async function deleteUser(id) {
+    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(
+        `${API_URL}/api/owner/users/${id}`,
+        {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to delete user');
+
+      setUsers(prev => prev.filter(u => u.id !== id));
+      alert('User deleted successfully');
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
   if (!me) {
     return (
       <div className="page">
@@ -926,62 +966,172 @@ function OwnerLayout() {
 
         {/* Statistics Overview */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('users')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👥</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{totalUsers}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Total Users</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('users')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{activeUsers}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Active</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('schools')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏫</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--info-color)' }}>{totalSchools}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Schools</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('users')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👨‍👩‍👧</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--warning-color)' }}>{usersByRole.parent}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Parents</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('users')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👨‍🏫</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{usersByRole.teacher}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Teachers</div>
           </div>
-          <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+          <div 
+            className="card" 
+            onClick={() => setTab('users')}
+            style={{ 
+              padding: '1rem', 
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '';
+            }}
+          >
             <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎓</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--danger-color)' }}>{usersByRole.admin}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Admins</div>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="tab-container">
-          <button
-            onClick={() => setTab('dashboard')}
-            className={`tab-button ${tab === 'dashboard' ? 'active' : ''}`}
-          >
-            📊 Dashboard
-          </button>
-          <button
-            onClick={() => setTab('schools')}
-            className={`tab-button ${tab === 'schools' ? 'active' : ''}`}
-          >
-            🏫 Schools
-          </button>
-          <button
-            onClick={() => setTab('users')}
-            className={`tab-button ${tab === 'users' ? 'active' : ''}`}
-          >
-            👥 Users
-          </button>
-        </div>
-
         {/* DASHBOARD TAB */}
-        {tab === 'dashboard' && (
+        {tab === 'dashboard' && <OwnerDashboard />}
+
+        {/* ANALYTICS TAB */}
+        {tab === 'analytics' && <OwnerDashboard />}
+
+        {/* Tabs */}
+        {tab !== 'dashboard' && tab !== 'analytics' && (
+          <div className="tab-container">
+            <button
+              onClick={() => setTab('dashboard')}
+              className={`tab-button ${tab === 'dashboard' ? 'active' : ''}`}
+            >
+              📊 Dashboard
+            </button>
+            <button
+              onClick={() => setTab('schools')}
+              className={`tab-button ${tab === 'schools' ? 'active' : ''}`}
+            >
+              🏫 Schools
+            </button>
+            <button
+              onClick={() => setTab('users')}
+              className={`tab-button ${tab === 'users' ? 'active' : ''}`}
+            >
+              👥 Users
+            </button>
+          </div>
+        )}
+
+        {/* OLD DASHBOARD - Remove this section */}
+        {tab === 'dashboard-old' && (
           <div className="card">
             <h3>📊 Platform Overview</h3>
             <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
@@ -1262,6 +1412,14 @@ function OwnerLayout() {
                     onClick={() => toggleActive(u)}
                   >
                     {u.isActive ? 'Disable' : 'Enable'}
+                  </button>
+                  <button
+                    className="btn"
+                    type="button"
+                    onClick={() => deleteUser(u.id)}
+                    style={{ backgroundColor: '#ef4444' }}
+                  >
+                    Delete
                   </button>
                 </div>
               </li>
@@ -4069,10 +4227,16 @@ function AdminLayout() {
       setCreatingClass(true);
       const token = localStorage.getItem('token');
 
+      // Get schoolId from current user
+      if (!me?.schoolId) {
+        throw new Error('School information not found. Please set up your school first.');
+      }
+
       const payload = {
         name: classForm.name,
         description: classForm.description || null,
         level: classForm.level || null,
+        schoolId: me.schoolId,
         enrollmentFeeId: classForm.enrollmentFeeId ? Number(classForm.enrollmentFeeId) : null,
         tuitionFeeId: classForm.tuitionFeeId ? Number(classForm.tuitionFeeId) : null,
         teacherId: classForm.teacherId ? Number(classForm.teacherId) : null,

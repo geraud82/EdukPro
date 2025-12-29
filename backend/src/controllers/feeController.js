@@ -208,7 +208,7 @@ const createInvoice = asyncHandler(async (req, res) => {
       feeId: Number(feeId),
       amount: Number(amount),
       currency: currency || 'XOF',
-      status: 'pending',
+      status: 'PENDING',
       dueDate: dueDate ? new Date(dueDate) : null,
       notes,
     },
@@ -302,12 +302,7 @@ const recordPayment = asyncHandler(async (req, res) => {
   if (totalPaid >= invoice.amount) {
     await prisma.invoice.update({
       where: { id: Number(id) },
-      data: { status: 'paid', paidAt: new Date() },
-    });
-  } else if (totalPaid > 0) {
-    await prisma.invoice.update({
-      where: { id: Number(id) },
-      data: { status: 'partial' },
+      data: { status: 'PAID' },
     });
   }
 

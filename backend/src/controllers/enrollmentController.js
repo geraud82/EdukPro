@@ -132,7 +132,7 @@ const createEnrollment = asyncHandler(async (req, res) => {
     data: {
       studentId: Number(studentId),
       classId: Number(classId),
-      status: 'pending',
+      status: 'PENDING',
     },
     include: {
       student: { select: { id: true, firstName: true, lastName: true } },
@@ -165,8 +165,8 @@ const updateEnrollment = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
-  if (!status || !['pending', 'approved', 'rejected'].includes(status)) {
-    throw new ApiError(400, 'Valid status is required (pending, approved, rejected)');
+  if (!status || !['PENDING', 'APPROVED', 'REJECTED'].includes(status)) {
+    throw new ApiError(400, 'Valid status is required (PENDING, APPROVED, REJECTED)');
   }
 
   const enrollment = await prisma.enrollment.findUnique({
@@ -204,7 +204,7 @@ const updateEnrollment = asyncHandler(async (req, res) => {
   });
 
   // If approved, create invoices for fees
-  if (status === 'approved') {
+  if (status === 'APPROVED') {
     const classWithFees = await prisma.class.findUnique({
       where: { id: enrollment.classId },
       include: { enrollmentFee: true, tuitionFee: true },
@@ -217,7 +217,7 @@ const updateEnrollment = asyncHandler(async (req, res) => {
           feeId: classWithFees.enrollmentFee.id,
           amount: classWithFees.enrollmentFee.amount,
           currency: classWithFees.enrollmentFee.currency,
-          status: 'pending',
+          status: 'PENDING',
           dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         },
       });
@@ -230,7 +230,7 @@ const updateEnrollment = asyncHandler(async (req, res) => {
           feeId: classWithFees.tuitionFee.id,
           amount: classWithFees.tuitionFee.amount,
           currency: classWithFees.tuitionFee.currency,
-          status: 'pending',
+          status: 'PENDING',
           dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         },
       });

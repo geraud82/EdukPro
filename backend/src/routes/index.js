@@ -15,6 +15,7 @@ const enrollmentRoutes = require('./enrollment.routes');
 const feeRoutes = require('./fee.routes');
 const chatRoutes = require('./chat.routes');
 const notificationRoutes = require('./notification.routes');
+const ownerRoutes = require('./owner.routes');
 
 // Mount routes
 router.use('/auth', authRoutes);
@@ -25,6 +26,7 @@ router.use('/enrollments', enrollmentRoutes);
 router.use('/', feeRoutes); // Mounts /fees and /invoices
 router.use('/chat', chatRoutes);
 router.use('/notifications', notificationRoutes);
+router.use('/owner', ownerRoutes);
 
 // Profile routes (need auth)
 const authController = require('../controllers/authController');
