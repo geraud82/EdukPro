@@ -1323,7 +1323,6 @@ function ParentLayout() {
     postalCode: '',
     phone: '',
     email: '',
-    medicalInfo: '',
     emergencyContact: '',
     emergencyPhone: '',
   });
@@ -1524,7 +1523,6 @@ function ParentLayout() {
         postalCode: studentForm.postalCode || null,
         phone: studentForm.phone || null,
         email: studentForm.email || null,
-        medicalInfo: studentForm.medicalInfo || null,
         emergencyContact: studentForm.emergencyContact || null,
         emergencyPhone: studentForm.emergencyPhone || null,
       };
@@ -1558,7 +1556,6 @@ function ParentLayout() {
         postalCode: '',
         phone: '',
         email: '',
-        medicalInfo: '',
         emergencyContact: '',
         emergencyPhone: '',
       });
@@ -1938,18 +1935,6 @@ function ParentLayout() {
                   />
                 </div>
 
-                <div style={{ marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem', fontWeight: '600' }}>
-                    Medical Information
-                  </label>
-                  <textarea
-                    placeholder="Any allergies, medical conditions, or special needs..."
-                    value={studentForm.medicalInfo}
-                    onChange={e => setStudentForm(f => ({ ...f, medicalInfo: e.target.value }))}
-                    rows={3}
-                    style={{ width: '100%', padding: '0.5rem', resize: 'vertical' }}
-                  />
-                </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1rem' }}>
                   <div>
@@ -2737,7 +2722,7 @@ function ParentMessages() {
         setMsgError('');
         setLoadingContacts(true);
         const token = localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/api/chat/contacts`, {
+        const res = await fetch(`${API_URL}/api/chat/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -3434,7 +3419,7 @@ function TeacherMessages() {
         setMsgError('');
         setLoadingContacts(true);
         const token = localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/api/chat/contacts`, {
+        const res = await fetch(`${API_URL}/api/chat/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -5664,7 +5649,7 @@ function AdminMessages() {
         setMsgError('');
         setLoadingContacts(true);
         const token = localStorage.getItem('token');
-        const res = await fetch(`${API_URL}/api/chat/contacts`, {
+        const res = await fetch(`${API_URL}/api/chat/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

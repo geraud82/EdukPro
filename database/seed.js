@@ -1,5 +1,12 @@
-const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs');
+const path = require('path');
+
+// Load env from backend folder
+require('dotenv').config({ path: path.resolve(__dirname, '../backend/.env') });
+
+// Resolve modules from backend folder
+const backendPath = path.resolve(__dirname, '../backend/node_modules');
+const { PrismaClient } = require(path.join(backendPath, '@prisma/client'));
+const bcrypt = require(path.join(backendPath, 'bcryptjs'));
 const prisma = new PrismaClient();
 
 async function main() {

@@ -129,7 +129,6 @@ const createStudent = asyncHandler(async (req, res) => {
     dateOfBirth,
     gender,
     address,
-    medicalInfo,
     notes,
     schoolId,
   } = req.body;
@@ -148,7 +147,6 @@ const createStudent = asyncHandler(async (req, res) => {
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
       gender,
       address,
-      medicalInfo,
       notes,
       schoolId: schoolId ? Number(schoolId) : null,
       parentId: parentId ? Number(parentId) : null,
@@ -174,7 +172,6 @@ const updateStudent = asyncHandler(async (req, res) => {
     dateOfBirth,
     gender,
     address,
-    medicalInfo,
     notes,
     schoolId,
   } = req.body;
@@ -200,7 +197,6 @@ const updateStudent = asyncHandler(async (req, res) => {
       ...(dateOfBirth !== undefined && { dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null }),
       ...(gender !== undefined && { gender }),
       ...(address !== undefined && { address }),
-      ...(medicalInfo !== undefined && { medicalInfo }),
       ...(notes !== undefined && { notes }),
       ...(schoolId !== undefined && { schoolId: schoolId ? Number(schoolId) : null }),
     },
