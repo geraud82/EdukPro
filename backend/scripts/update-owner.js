@@ -1,24 +1,44 @@
-require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const hash = await bcrypt.hash(process.env.OWNER_PASSWORD, 10);
+  const email = process.env.OWNER_EMAIL;
+  const password = process.env.OWNER_PASSWORD;
 
-  await prisma.user.update({
-    where: { email: process.env.OWNER_EMAIL },
-    data: { passwordHash: hash }
+  if (!email || !password) {
+    throw new Error("Missing OWNER_EMAIL or OWNER_PASSWORD");
+  }
+
+  const hash = await bcrypt.hash(password, 10);
+
+  const user = await prisma.user.findUnique({
+    where: { email },
   });
 
-  console.log("Owner password updated successfully!");
+  if (user) {
+    await prisma.user.update({
+      where: { email },
+      data: { password: hash },
+    });
+    console.log("✅ Owner UPDATED");
+  } else {
+    await prisma.user.create({
+      data: {
+        email,
+        password: hash,
+        role: "OWNER",
+        isActive: true,
+      },
+    });
+    console.log("✅ Owner CREATED");
+  }
 }
 
 main()
   .catch((e) => {
-    console.error("Error updating owner password:", e);
-    process.exit(1);
+    console.error("❌ Error:", e.message);
   })
   .finally(async () => {
     await prisma.$disconnect();
