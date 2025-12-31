@@ -29,7 +29,7 @@ async function main() {
         name: "Owner",
         email,
         passwordHash: hash,
-        role: "OWNER",
+        role: "owner",
         isActive: true,
       },
     });
