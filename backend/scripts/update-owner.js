@@ -20,7 +20,7 @@ async function main() {
   if (user) {
     await prisma.user.update({
       where: { email },
-      data: { password: hash },
+      data: { passwordHash: hash },
     });
     console.log("✅ Owner UPDATED");
   } else {
@@ -28,7 +28,7 @@ async function main() {
       data: {
         name: "Owner",
         email,
-        password: hash,
+        passwordHash: hash,
         role: "OWNER",
         isActive: true,
       },
