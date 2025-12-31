@@ -1,4 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
+import { 
+  Users, 
+  School, 
+  GraduationCap, 
+  DollarSign, 
+  BarChart3,
+  TrendingUp,
+  Crown,
+  UserCircle,
+  BookOpen,
+  RefreshCw,
+  AlertCircle,
+  Clock,
+  Trophy,
+  Zap,
+  Building2
+} from 'lucide-react';
 import { API_URL } from '../utils/config';
 import './OwnerDashboard.css';
 
@@ -137,7 +154,7 @@ function OwnerDashboard() {
     return (
       <div className="owner-dashboard">
         <div className="error-state">
-          <span className="error-icon">⚠️</span>
+          <span className="error-icon"><AlertCircle size={48} /></span>
           <h3>Error Loading Dashboard</h3>
           <p>{error}</p>
           <button className="btn" onClick={() => window.location.reload()}>
@@ -153,13 +170,17 @@ function OwnerDashboard() {
       {/* Header */}
       <div className="dashboard-header">
         <div>
-          <h1 className="dashboard-title">👑 Platform Overview</h1>
+          <h1 className="dashboard-title">
+            <Crown size={28} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }} />
+            Platform Overview
+          </h1>
           <p className="dashboard-subtitle">
             Monitor and manage your entire EduckPro platform
           </p>
         </div>
         <button className="btn btn-primary" onClick={loadDashboardStats}>
-          🔄 Refresh
+          <RefreshCw size={18} style={{ marginRight: '8px' }} />
+          Refresh
         </button>
       </div>
 
@@ -167,7 +188,7 @@ function OwnerDashboard() {
       {stats && (
         <div className="metrics-grid">
           <MetricCard
-            icon="👥"
+            icon={<Users size={32} />}
             title="Total Users"
             value={stats.overview.totalUsers}
             subtitle={`${stats.overview.activeUsers} active`}
@@ -175,7 +196,7 @@ function OwnerDashboard() {
             color="blue"
           />
           <MetricCard
-            icon="🏫"
+            icon={<School size={32} />}
             title="Schools"
             value={stats.overview.totalSchools}
             subtitle={`${stats.overview.totalClasses} classes`}
@@ -183,14 +204,14 @@ function OwnerDashboard() {
             color="green"
           />
           <MetricCard
-            icon="👨‍🎓"
+            icon={<GraduationCap size={32} />}
             title="Students"
             value={stats.overview.totalStudents}
             subtitle={`${stats.overview.totalEnrollments} enrollments`}
             color="purple"
           />
           <MetricCard
-            icon="💰"
+            icon={<DollarSign size={32} />}
             title="Revenue"
             value={`${stats.financial.totalRevenue.toLocaleString()} XOF`}
             subtitle={`${stats.financial.paidInvoices} paid invoices`}
@@ -204,32 +225,33 @@ function OwnerDashboard() {
       {stats && (
         <div className="card dashboard-card">
           <h3 className="card-title">
-            <span>📊</span> User Distribution
+            <BarChart3 size={24} style={{ marginRight: '8px' }} />
+            User Distribution
           </h3>
           <div className="distribution-grid">
             <DistributionItem
-              icon="👨‍👩‍👧"
+              icon={<Users size={24} />}
               label="Parents"
               count={stats.userDistribution.parent}
               total={stats.overview.totalUsers}
               color="#3b82f6"
             />
             <DistributionItem
-              icon="👨‍🏫"
+              icon={<BookOpen size={24} />}
               label="Teachers"
               count={stats.userDistribution.teacher}
               total={stats.overview.totalUsers}
               color="#10b981"
             />
             <DistributionItem
-              icon="👔"
+              icon={<Building2 size={24} />}
               label="Admins"
               count={stats.userDistribution.admin}
               total={stats.overview.totalUsers}
               color="#f59e0b"
             />
             <DistributionItem
-              icon="👑"
+              icon={<Crown size={24} />}
               label="Owners"
               count={stats.userDistribution.owner}
               total={stats.overview.totalUsers}
@@ -244,7 +266,8 @@ function OwnerDashboard() {
         <div ref={analyticsRef} id="analytics" className="card dashboard-card">
           <div className="card-header-with-controls">
             <h3 className="card-title">
-              <span>📈</span> Platform Analytics
+              <TrendingUp size={24} style={{ marginRight: '8px' }} />
+              Platform Analytics
             </h3>
             <select
               value={analyticsPeriod}
@@ -281,7 +304,10 @@ function OwnerDashboard() {
           {/* Top Schools */}
           {analytics.topSchools.length > 0 && (
             <div className="top-schools">
-              <h4 className="subsection-title">🏆 Top Schools by Students</h4>
+              <h4 className="subsection-title">
+                <Trophy size={20} style={{ marginRight: '8px', display: 'inline-block', verticalAlign: 'middle' }} />
+                Top Schools by Students
+              </h4>
               <div className="top-schools-list">
                 {analytics.topSchools.slice(0, 5).map((school, index) => (
                   <div key={school.id} className="top-school-item">
@@ -304,7 +330,8 @@ function OwnerDashboard() {
       {stats && stats.recentActivity.recentUsers.length > 0 && (
         <div className="card dashboard-card">
           <h3 className="card-title">
-            <span>🕒</span> Recent Activity
+            <Clock size={24} style={{ marginRight: '8px' }} />
+            Recent Activity
           </h3>
           <div className="activity-list">
             {stats.recentActivity.recentUsers.map(user => (
@@ -332,7 +359,8 @@ function OwnerDashboard() {
       {/* Quick Actions */}
       <div className="card dashboard-card">
         <h3 className="card-title">
-          <span>⚡</span> Quick Actions
+          <Zap size={24} style={{ marginRight: '8px' }} />
+          Quick Actions
         </h3>
         <div className="quick-actions">
           <button 
@@ -343,7 +371,7 @@ function OwnerDashboard() {
               }
             }}
           >
-            <span className="action-icon">📊</span>
+            <span className="action-icon"><BarChart3 size={20} /></span>
             <span className="action-label">View Analytics</span>
           </button>
           <button 
@@ -353,7 +381,7 @@ function OwnerDashboard() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
-            <span className="action-icon">👥</span>
+            <span className="action-icon"><Users size={20} /></span>
             <span className="action-label">Manage Users</span>
           </button>
           <button 
@@ -363,11 +391,11 @@ function OwnerDashboard() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
           >
-            <span className="action-icon">🏫</span>
+            <span className="action-icon"><School size={20} /></span>
             <span className="action-label">Manage Schools</span>
           </button>
           <button className="action-button" onClick={loadDashboardStats}>
-            <span className="action-icon">🔄</span>
+            <span className="action-icon"><RefreshCw size={20} /></span>
             <span className="action-label">Refresh Data</span>
           </button>
         </div>
@@ -385,7 +413,7 @@ function MetricCard({ icon, title, value, subtitle, trend, color = 'blue' }) {
         <div className="metric-title">{title}</div>
         <div className="metric-value">{value}</div>
         {subtitle && <div className="metric-subtitle">{subtitle}</div>}
-        {trend && <div className="metric-trend">↗ {trend}</div>}
+        {trend && <div className="metric-trend"><TrendingUp size={14} style={{ marginRight: '4px' }} />{trend}</div>}
       </div>
     </div>
   );
@@ -415,13 +443,13 @@ function DistributionItem({ icon, label, count, total, color }) {
 
 // Helper function
 function getRoleIcon(role) {
-  const icons = {
-    parent: '👨‍👩‍👧',
-    teacher: '👨‍🏫',
-    admin: '👔',
-    owner: '👑'
+  const iconMap = {
+    parent: <Users size={24} />,
+    teacher: <BookOpen size={24} />,
+    admin: <Building2 size={24} />,
+    owner: <Crown size={24} />
   };
-  return icons[role] || '👤';
+  return iconMap[role] || <UserCircle size={24} />;
 }
 
 export default OwnerDashboard;

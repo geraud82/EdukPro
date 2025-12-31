@@ -1,4 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import { 
+  Sprout, 
+  Rocket, 
+  Building2, 
+  Check, 
+  Sparkles 
+} from 'lucide-react';
 import './Pricing.css';
 
 function Pricing() {
@@ -7,7 +14,7 @@ function Pricing() {
   const plans = [
     {
       name: 'Starter',
-      icon: '🌱',
+      icon: <Sprout size={32} />,
       price: 'Free',
       period: 'Forever',
       description: 'Perfect for small schools getting started',
@@ -26,7 +33,7 @@ function Pricing() {
     },
     {
       name: 'Professional',
-      icon: '🚀',
+      icon: <Rocket size={32} />,
       price: '$49',
       period: 'per month',
       description: 'Ideal for growing educational institutions',
@@ -49,7 +56,7 @@ function Pricing() {
     },
     {
       name: 'Enterprise',
-      icon: '🏢',
+      icon: <Building2 size={32} />,
       price: 'Custom',
       period: 'Contact us',
       description: 'For large institutions with special needs',
@@ -112,7 +119,8 @@ function Pricing() {
             Choose the perfect plan for your educational institution
           </p>
           <div className="pricing-badge">
-            ✨ No hidden fees · Cancel anytime · 14-day money-back guarantee
+            <Sparkles size={16} style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '4px' }} />
+            No hidden fees · Cancel anytime · 14-day money-back guarantee
           </div>
         </div>
       </div>
@@ -143,7 +151,7 @@ function Pricing() {
               <ul className="pricing-features">
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="pricing-feature">
-                    <span className="feature-check">✓</span>
+                    <span className="feature-check"><Check size={18} /></span>
                     <span>{feature}</span>
                   </li>
                 ))}

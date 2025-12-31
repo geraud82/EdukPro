@@ -1,5 +1,26 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { 
+  GraduationCap, 
+  Users, 
+  BookOpen, 
+  DollarSign, 
+  MessageCircle, 
+  BarChart3,
+  Zap,
+  Lock,
+  Smartphone,
+  Globe,
+  Rocket,
+  Gem,
+  Building2,
+  LogIn,
+  Sparkles,
+  ArrowRight,
+  Shield,
+  Check,
+  Download
+} from 'lucide-react';
 import './HomePage.css';
 
 function HomePage() {
@@ -76,32 +97,32 @@ function HomePage() {
 
   const features = [
     {
-      icon: '👨‍👩‍👧‍👦',
+      icon: <Users size={32} />,
       title: 'Parent Portal',
       description: 'Manage your children\'s education, track fees, and communicate with teachers all in one place.'
     },
     {
-      icon: '👨‍🏫',
+      icon: <BookOpen size={32} />,
       title: 'Teacher Dashboard',
       description: 'Organize classes, track student progress, and maintain seamless communication with parents.'
     },
     {
-      icon: '🎓',
+      icon: <GraduationCap size={32} />,
       title: 'School Management',
       description: 'Complete administration tools for managing fees, enrollments, classes, and staff efficiently.'
     },
     {
-      icon: '💰',
+      icon: <DollarSign size={32} />,
       title: 'Fee Management',
       description: 'Automated invoice generation, payment tracking, and financial reporting made simple.'
     },
     {
-      icon: '💬',
+      icon: <MessageCircle size={32} />,
       title: 'Real-time Chat',
       description: 'Instant messaging between parents, teachers, and administrators for better collaboration.'
     },
     {
-      icon: '📊',
+      icon: <BarChart3 size={32} />,
       title: 'Analytics & Reports',
       description: 'Comprehensive insights and data visualization for informed decision-making.'
     }
@@ -109,22 +130,22 @@ function HomePage() {
 
   const benefits = [
     {
-      icon: '⚡',
+      icon: <Zap size={24} />,
       title: 'Lightning Fast',
       description: 'Built with modern technology for instant response times'
     },
     {
-      icon: '🔒',
+      icon: <Lock size={24} />,
       title: 'Secure & Safe',
       description: 'Your data is protected with enterprise-grade security'
     },
     {
-      icon: '📱',
+      icon: <Smartphone size={24} />,
       title: 'Mobile Ready',
       description: 'Access from any device, anywhere, anytime'
     },
     {
-      icon: '🌍',
+      icon: <Globe size={24} />,
       title: 'Multi-School',
       description: 'Support for multiple schools and institutions'
     }
@@ -143,7 +164,7 @@ function HomePage() {
       <nav className={`homepage-nav ${scrolled ? 'scrolled' : ''} ${mobileMenuOpen ? 'menu-open' : ''}`}>
         <div className="nav-container">
           <div className="nav-logo">
-            <span className="logo-icon">🎓</span>
+            <span className="logo-icon"><GraduationCap size={28} /></span>
             <span className="logo-text">EduckPro</span>
           </div>
           
@@ -183,24 +204,24 @@ function HomePage() {
           {/* Mobile menu dropdown */}
           <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
             <a href="#features" className="mobile-menu-link" onClick={handleAnchorClick}>
-              <span className="mobile-menu-icon">🚀</span>
+              <span className="mobile-menu-icon"><Rocket size={20} /></span>
               Features
             </a>
             <a href="#benefits" className="mobile-menu-link" onClick={handleAnchorClick}>
-              <span className="mobile-menu-icon">💎</span>
+              <span className="mobile-menu-icon"><Gem size={20} /></span>
               Benefits
             </a>
             <a href="#about" className="mobile-menu-link" onClick={handleAnchorClick}>
-              <span className="mobile-menu-icon">🏢</span>
+              <span className="mobile-menu-icon"><Building2 size={20} /></span>
               About
             </a>
             <div className="mobile-menu-divider"></div>
             <button onClick={() => handleNavClick('/login')} className="mobile-menu-btn mobile-menu-btn-login">
-              <span className="mobile-menu-icon">🔐</span>
+              <span className="mobile-menu-icon"><LogIn size={20} /></span>
               Login
             </button>
             <button onClick={() => handleNavClick('/signup')} className="mobile-menu-btn mobile-menu-btn-signup">
-              <span className="mobile-menu-icon">✨</span>
+              <span className="mobile-menu-icon"><Sparkles size={20} /></span>
               Create Account
             </button>
           </div>
@@ -236,15 +257,15 @@ function HomePage() {
             <div className="hero-buttons">
               <button onClick={() => navigate('/signup')} className="hero-btn hero-btn-primary">
                 <span>Get Started Free</span>
-                <span className="btn-arrow">→</span>
+                <span className="btn-arrow"><ArrowRight size={20} /></span>
               </button>
               <button onClick={() => navigate('/login')} className="hero-btn hero-btn-secondary">
-                <span className="btn-icon">🔐</span>
+                <span className="btn-icon"><Shield size={20} /></span>
                 <span>Sign In</span>
               </button>
               {showInstallButton && (
                 <button onClick={handleInstallClick} className="hero-btn hero-btn-install">
-                  <span className="btn-icon">📱</span>
+                  <span className="btn-icon"><Download size={20} /></span>
                   <span>Install App</span>
                 </button>
               )}
@@ -266,7 +287,7 @@ function HomePage() {
         <div className="section-container">
           <div className="section-header">
             <div className="section-badge">
-              <span>🚀</span>
+              <span><Rocket size={20} /></span>
               <span>Features</span>
             </div>
             <h2 className="section-title">Everything You Need</h2>
@@ -292,7 +313,7 @@ function HomePage() {
           <div className="benefits-content">
             <div className="benefits-text">
               <div className="section-badge">
-                <span>💎</span>
+                <span><Gem size={20} /></span>
                 <span>Why Choose Us</span>
               </div>
               <h2 className="section-title">Built for Modern Schools</h2>
@@ -339,11 +360,11 @@ function HomePage() {
                 </div>
               </div>
               <div className="visual-card visual-card-small visual-card-top">
-                <div className="small-icon">✅</div>
+                <div className="small-icon"><Check size={20} /></div>
                 <div className="small-text">All fees paid</div>
               </div>
               <div className="visual-card visual-card-small visual-card-bottom">
-                <div className="small-icon">💬</div>
+                <div className="small-icon"><MessageCircle size={20} /></div>
                 <div className="small-text">3 new messages</div>
               </div>
             </div>
@@ -358,7 +379,7 @@ function HomePage() {
             <div className="about-image">
               <div className="about-image-container">
                 <div className="about-card about-card-main">
-                  <div className="about-icon">🎯</div>
+                  <div className="about-icon"><GraduationCap size={32} /></div>
                   <div className="about-card-content">
                     <h4>Our Mission</h4>
                     <p>Empowering educational institutions with modern tools</p>
@@ -376,7 +397,7 @@ function HomePage() {
             </div>
             <div className="about-text">
               <div className="section-badge">
-                <span>🏢</span>
+                <span><Building2 size={20} /></span>
                 <span>About Us</span>
               </div>
               <h2 className="section-title">Transforming Education Management</h2>
@@ -391,19 +412,19 @@ function HomePage() {
               </p>
               <div className="about-highlights">
                 <div className="about-highlight">
-                  <span className="highlight-icon">✓</span>
+                  <span className="highlight-icon"><Check size={20} /></span>
                   <span>Trusted by 50+ schools worldwide</span>
                 </div>
                 <div className="about-highlight">
-                  <span className="highlight-icon">✓</span>
+                  <span className="highlight-icon"><Check size={20} /></span>
                   <span>Dedicated customer success team</span>
                 </div>
                 <div className="about-highlight">
-                  <span className="highlight-icon">✓</span>
+                  <span className="highlight-icon"><Check size={20} /></span>
                   <span>Regular updates and new features</span>
                 </div>
                 <div className="about-highlight">
-                  <span className="highlight-icon">✓</span>
+                  <span className="highlight-icon"><Check size={20} /></span>
                   <span>99.9% uptime guarantee</span>
                 </div>
               </div>
@@ -423,7 +444,7 @@ function HomePage() {
             <div className="cta-buttons">
               <button onClick={() => navigate('/signup')} className="cta-btn cta-btn-primary">
                 <span>Create Free Account</span>
-                <span className="btn-arrow">→</span>
+                <span className="btn-arrow"><ArrowRight size={20} /></span>
               </button>
               <button onClick={() => navigate('/login')} className="cta-btn cta-btn-secondary">
                 Sign In
@@ -439,7 +460,7 @@ function HomePage() {
           <div className="footer-content">
             <div className="footer-column">
               <div className="footer-logo">
-                <span className="logo-icon">🎓</span>
+                <span className="logo-icon"><GraduationCap size={28} /></span>
                 <span className="logo-text">EduckPro</span>
               </div>
               <p className="footer-description">

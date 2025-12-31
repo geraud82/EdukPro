@@ -1,6 +1,24 @@
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import { 
+  BarChart3, 
+  School, 
+  Users, 
+  TrendingUp, 
+  UserCircle, 
+  Baby, 
+  DollarSign, 
+  BookOpen, 
+  MessageCircle,
+  GraduationCap,
+  Receipt,
+  CheckSquare,
+  Building2,
+  UserCheck,
+  UsersRound,
+  ShieldCheck
+} from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import SchoolInfo from './components/SchoolInfo';
 import SchoolBrowser from './components/SchoolBrowser';
@@ -709,11 +727,11 @@ function OwnerLayout() {
 
   // Sidebar tabs configuration
   const ownerTabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'schools', label: 'Schools', icon: '🏫' },
-    { id: 'users', label: 'Users', icon: '👥' },
-    { id: 'analytics', label: 'Analytics', icon: '📈' },
-    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'dashboard', label: 'Dashboard', icon: <BarChart3 size={20} /> },
+    { id: 'schools', label: 'Schools', icon: <School size={20} /> },
+    { id: 'users', label: 'Users', icon: <Users size={20} /> },
+    { id: 'analytics', label: 'Analytics', icon: <TrendingUp size={20} /> },
+    { id: 'profile', label: 'Profile', icon: <UserCircle size={20} /> },
   ];
 
   // Load current user from localStorage
@@ -986,7 +1004,7 @@ function OwnerLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👥</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><Users size={32} color="var(--primary-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{totalUsers}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Total Users</div>
           </div>
@@ -1008,7 +1026,7 @@ function OwnerLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><UserCheck size={32} color="var(--success-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{activeUsers}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Active</div>
           </div>
@@ -1030,7 +1048,7 @@ function OwnerLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏫</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><School size={32} color="var(--info-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--info-color)' }}>{totalSchools}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Schools</div>
           </div>
@@ -1052,7 +1070,7 @@ function OwnerLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👨‍👩‍👧</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><UsersRound size={32} color="var(--warning-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--warning-color)' }}>{usersByRole.parent}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Parents</div>
           </div>
@@ -1074,7 +1092,7 @@ function OwnerLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👨‍🏫</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><GraduationCap size={32} color="var(--success-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{usersByRole.teacher}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Teachers</div>
           </div>
@@ -1096,7 +1114,7 @@ function OwnerLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎓</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><ShieldCheck size={32} color="var(--danger-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--danger-color)' }}>{usersByRole.admin}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Admins</div>
           </div>
@@ -1458,12 +1476,12 @@ function ParentLayout() {
 
   // Sidebar tabs configuration
   const parentTabs = [
-    { id: 'children', label: 'Children', icon: '👶' },
-    { id: 'fees', label: 'Fees', icon: '💰' },
-    { id: 'schools', label: 'Schools', icon: '🏫' },
-    { id: 'classes', label: 'Classes', icon: '📚' },
-    { id: 'messages', label: 'Messages', icon: '💬' },
-    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'children', label: 'Children', icon: <Baby size={20} /> },
+    { id: 'fees', label: 'Fees', icon: <DollarSign size={20} /> },
+    { id: 'schools', label: 'Schools', icon: <School size={20} /> },
+    { id: 'classes', label: 'Classes', icon: <BookOpen size={20} /> },
+    { id: 'messages', label: 'Messages', icon: <MessageCircle size={20} /> },
+    { id: 'profile', label: 'Profile', icon: <UserCircle size={20} /> },
   ];
 
   // Children state
@@ -1851,22 +1869,22 @@ function ParentLayout() {
       {/* Overview Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👶</div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><Baby size={32} color="var(--primary-color)" /></div>
           <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{totalChildren}</div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Children</div>
         </div>
         <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📚</div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><BookOpen size={32} color="var(--success-color)" /></div>
           <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{enrolledClasses}</div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Classes</div>
         </div>
         <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💰</div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><DollarSign size={32} color="var(--warning-color)" /></div>
           <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--warning-color)' }}>{pendingInvoices}</div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Pending</div>
         </div>
         <div className="card" style={{ padding: '1rem', textAlign: 'center' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💵</div>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><DollarSign size={32} color="var(--danger-color)" /></div>
           <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--danger-color)' }}>{totalPending.toLocaleString()}</div>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>XOF Due</div>
         </div>
@@ -3249,10 +3267,10 @@ function TeacherLayout() {
 
   // Sidebar tabs configuration
   const teacherTabs = [
-    { id: 'classes', label: 'My Classes', icon: '📚' },
-    { id: 'students', label: 'Students', icon: '👨‍🎓' },
-    { id: 'messages', label: 'Messages', icon: '💬' },
-    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'classes', label: 'My Classes', icon: <BookOpen size={20} /> },
+    { id: 'students', label: 'Students', icon: <GraduationCap size={20} /> },
+    { id: 'messages', label: 'Messages', icon: <MessageCircle size={20} /> },
+    { id: 'profile', label: 'Profile', icon: <UserCircle size={20} /> },
   ];
 
   // Load teacher's classes
@@ -3856,15 +3874,15 @@ function AdminLayout() {
 
   // Sidebar tabs configuration
   const adminTabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-    { id: 'school', label: 'School', icon: '🏫' },
-    { id: 'teachers', label: 'Teachers', icon: '👨‍🏫' },
-    { id: 'classes', label: 'Classes', icon: '📚' },
-    { id: 'fees', label: 'Fees', icon: '💵' },
-    { id: 'invoices', label: 'Invoices', icon: '📋' },
-    { id: 'enrollments', label: 'Enrollments', icon: '✅' },
-    { id: 'messages', label: 'Messages', icon: '💬' },
-    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'dashboard', label: 'Dashboard', icon: <BarChart3 size={20} /> },
+    { id: 'school', label: 'School', icon: <School size={20} /> },
+    { id: 'teachers', label: 'Teachers', icon: <GraduationCap size={20} /> },
+    { id: 'classes', label: 'Classes', icon: <BookOpen size={20} /> },
+    { id: 'fees', label: 'Fees', icon: <DollarSign size={20} /> },
+    { id: 'invoices', label: 'Invoices', icon: <Receipt size={20} /> },
+    { id: 'enrollments', label: 'Enrollments', icon: <CheckSquare size={20} /> },
+    { id: 'messages', label: 'Messages', icon: <MessageCircle size={20} /> },
+    { id: 'profile', label: 'Profile', icon: <UserCircle size={20} /> },
   ];
 
   // School info state
@@ -4343,7 +4361,7 @@ function AdminLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👨‍🎓</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><GraduationCap size={32} color="var(--primary-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{totalStudents}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Students</div>
           </div>
@@ -4365,7 +4383,7 @@ function AdminLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📚</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><BookOpen size={32} color="var(--success-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{totalClasses}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Classes</div>
           </div>
@@ -4387,7 +4405,7 @@ function AdminLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💵</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><DollarSign size={32} color="var(--info-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--info-color)' }}>{totalFees}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Fee Types</div>
           </div>
@@ -4409,7 +4427,7 @@ function AdminLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📋</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><Receipt size={32} color="var(--warning-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--warning-color)' }}>{pendingInvoicesCount}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Pending</div>
           </div>
@@ -4431,7 +4449,7 @@ function AdminLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><CheckSquare size={32} color="var(--danger-color)" /></div>
             <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--danger-color)' }}>{pendingEnrollmentsCount}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>To Review</div>
           </div>
@@ -4453,7 +4471,7 @@ function AdminLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💰</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><DollarSign size={32} color="var(--success-color)" /></div>
             <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--success-color)' }}>{totalRevenue.toLocaleString()}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>XOF Paid</div>
           </div>
@@ -4475,7 +4493,7 @@ function AdminLayout() {
               e.currentTarget.style.boxShadow = '';
             }}
           >
-            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⏳</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.5rem' }}><DollarSign size={32} color="var(--warning-color)" /></div>
             <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'var(--warning-color)' }}>{pendingRevenue.toLocaleString()}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>XOF Due</div>
           </div>

@@ -1,5 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  GraduationCap, 
+  Users, 
+  BookOpen, 
+  Building2, 
+  Crown, 
+  UserCircle, 
+  LogOut, 
+  Menu, 
+  X,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-react';
 import Notifications from './Notifications';
 import './Sidebar.css';
 
@@ -48,11 +61,11 @@ function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs 
 
   const getRoleIcon = (role) => {
     switch (role) {
-      case 'parent': return '👨‍👩‍👧‍👦';
-      case 'teacher': return '👨‍🏫';
-      case 'admin': return '👔';
-      case 'owner': return '👑';
-      default: return '👤';
+      case 'parent': return <Users size={24} />;
+      case 'teacher': return <BookOpen size={24} />;
+      case 'admin': return <Building2 size={24} />;
+      case 'owner': return <Crown size={24} />;
+      default: return <UserCircle size={24} />;
     }
   };
 
@@ -74,14 +87,14 @@ function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs 
         onClick={toggleSidebar}
         aria-label="Toggle sidebar"
       >
-        {isCollapsed ? '☰' : '✕'}
+        {isCollapsed ? <Menu size={24} /> : <X size={24} />}
       </button>
 
       <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         {/* Logo/Brand */}
         <div className="sidebar-header">
           <div className="sidebar-logo">
-            <span className="logo-icon">🎓</span>
+            <span className="logo-icon"><GraduationCap size={28} /></span>
             {!isCollapsed && <span className="logo-text">EduckPro</span>}
           </div>
         </div>
@@ -132,7 +145,7 @@ function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs 
             onClick={handleLogout}
             title="Logout"
           >
-            <span className="nav-icon">🚪</span>
+            <span className="nav-icon"><LogOut size={20} /></span>
             {!isCollapsed && <span className="nav-label">Logout</span>}
           </button>
         </div>
@@ -143,7 +156,7 @@ function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs 
           onClick={toggleSidebar}
           aria-label="Toggle sidebar"
         >
-          {isCollapsed ? '▶' : '◀'}
+          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
       </aside>
 
