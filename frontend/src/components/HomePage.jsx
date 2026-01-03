@@ -155,8 +155,8 @@ function HomePage() {
   };
 
   const handleSchoolClick = (school) => {
-    // Navigate to signup with school info
-    navigate('/signup', { state: { selectedSchool: school } });
+    // Navigate to school public page
+    navigate(`/school/${school.id}`);
   };
 
   const features = [

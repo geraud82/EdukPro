@@ -27,6 +27,7 @@ import Notifications from './components/Notifications';
 import HomePage from './components/HomePage';
 import OwnerDashboard from './components/OwnerDashboard';
 import Pricing from './components/Pricing';
+import SchoolPublicPage from './components/SchoolPublicPage';
 import { API_URL } from './utils/config';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
       <div className="app-container">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/school/:id" element={<SchoolPublicPage />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
