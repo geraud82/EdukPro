@@ -19,8 +19,12 @@ import {
   ArrowRight,
   Shield,
   Check,
-  Download
+  Download,
+  Search,
+  MapPin,
+  School
 } from 'lucide-react';
+import { API_URL } from '../config';
 import './HomePage.css';
 
 function HomePage() {
@@ -29,6 +33,12 @@ function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallButton, setShowInstallButton] = useState(false);
+  
+  // School search state
+  const [schools, setSchools] = useState([]);
+  const [filteredSchools, setFilteredSchools] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loadingSchools, setLoadingSchools] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,6 +103,60 @@ function HomePage() {
     }
     
     setDeferredPrompt(null);
+  };
+
+  // Fetch schools on component mount
+  useEffect(() => {
+    fetchSchools();
+  }, []);
+
+  // Filter schools when search term changes
+  useEffect(() => {
+    filterSchools();
+  }, [searchTerm, schools]);
+
+  const fetchSchools = async () => {
+    try {
+      setLoadingSchools(true);
+      const response = await fetch(`${API_URL}/api/schools/public`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch schools');
+      }
+
+      const data = await response.json();
+      setSchools(data);
+      setFilteredSchools(data);
+    } catch (err) {
+      console.error('Error fetching schools:', err);
+      setSchools([]);
+      setFilteredSchools([]);
+    } finally {
+      setLoadingSchools(false);
+    }
+  };
+
+  const filterSchools = () => {
+    if (!searchTerm.trim()) {
+      setFilteredSchools(schools);
+      return;
+    }
+
+    const term = searchTerm.toLowerCase();
+    const filtered = schools.filter(
+      (school) =>
+        school.name?.toLowerCase().includes(term) ||
+        school.address?.toLowerCase().includes(term) ||
+        school.city?.toLowerCase().includes(term) ||
+        school.country?.toLowerCase().includes(term) ||
+        school.description?.toLowerCase().includes(term)
+    );
+    setFilteredSchools(filtered);
+  };
+
+  const handleSchoolClick = (school) => {
+    // Navigate to signup with school info
+    navigate('/signup', { state: { selectedSchool: school } });
   };
 
   const features = [
@@ -304,6 +368,131 @@ function HomePage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* School Search Section */}
+      <section id="schools" className="schools-section">
+        <div className="section-container">
+          <div className="section-header">
+            <div className="section-badge">
+              <span><School size={20} /></span>
+              <span>Browse Schools</span>
+            </div>
+            <h2 className="section-title">Find Your Perfect School</h2>
+            <p className="section-description">
+              Discover and connect with schools using EduckPro. Search by name, location, or description.
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="school-search-bar">
+            <div className="search-input-wrapper">
+              <Search className="search-icon" size={20} />
+              <input
+                type="text"
+                placeholder="Search schools by name, location, or description..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="school-search-input"
+              />
+              {searchTerm && (
+                <button onClick={() => setSearchTerm('')} className="search-clear-btn">
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Results Count */}
+          <div className="schools-count">
+            {loadingSchools ? (
+              <span>Loading schools...</span>
+            ) : (
+              <span>
+                {filteredSchools.length} {filteredSchools.length === 1 ? 'school' : 'schools'} found
+              </span>
+            )}
+          </div>
+
+          {/* Schools Grid */}
+          {loadingSchools ? (
+            <div className="schools-loading">
+              <div className="loading-spinner"></div>
+              <p>Loading schools...</p>
+            </div>
+          ) : filteredSchools.length === 0 ? (
+            <div className="no-schools-found">
+              <School size={48} />
+              <h3>No schools found</h3>
+              <p>
+                {searchTerm 
+                  ? "Try adjusting your search terms" 
+                  : "No schools are currently registered on the platform"}
+              </p>
+              {searchTerm && (
+                <button onClick={() => setSearchTerm('')} className="reset-search-btn">
+                  Clear Search
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="schools-grid">
+              {filteredSchools.slice(0, 6).map((school) => (
+                <div
+                  key={school.id}
+                  className="school-card-home"
+                  onClick={() => handleSchoolClick(school)}
+                >
+                  <div className="school-card-icon">
+                    <School size={32} />
+                  </div>
+                  <div className="school-card-content">
+                    <h3 className="school-card-title">{school.name}</h3>
+                    {(school.city || school.country) && (
+                      <div className="school-card-location">
+                        <MapPin size={16} />
+                        <span>
+                          {[school.city, school.country].filter(Boolean).join(', ')}
+                        </span>
+                      </div>
+                    )}
+                    {school.description && (
+                      <p className="school-card-desc">
+                        {school.description.length > 120
+                          ? `${school.description.substring(0, 120)}...`
+                          : school.description}
+                      </p>
+                    )}
+                    <div className="school-card-stats">
+                      <span className="school-stat">
+                        <Users size={16} />
+                        {school._count?.students || 0} Students
+                      </span>
+                      <span className="school-stat">
+                        <BookOpen size={16} />
+                        {school._count?.classes || 0} Classes
+                      </span>
+                    </div>
+                  </div>
+                  <button className="school-card-btn">
+                    <span>View Details</span>
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* View All Button */}
+          {filteredSchools.length > 6 && (
+            <div className="schools-view-all">
+              <button onClick={() => navigate('/signup')} className="view-all-schools-btn">
+                <span>View All {filteredSchools.length} Schools</span>
+                <ArrowRight size={20} />
+              </button>
+            </div>
+          )}
         </div>
       </section>
 

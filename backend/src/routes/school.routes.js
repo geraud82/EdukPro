@@ -7,7 +7,11 @@ const router = express.Router();
 const schoolController = require('../controllers/schoolController');
 const { authMiddleware, requireAdmin, requireOwner } = require('../middleware/auth');
 
-// Public routes (all authenticated users can view schools)
+// Public routes (no authentication required)
+router.get('/public', schoolController.getAllSchools);
+router.get('/public/:id', schoolController.getSchoolById);
+
+// Authenticated routes
 router.get('/', authMiddleware, schoolController.getAllSchools);
 router.get('/:id', authMiddleware, schoolController.getSchoolById);
 

@@ -15,7 +15,7 @@ function Pricing() {
     {
       name: 'Starter',
       icon: <Sprout size={32} />,
-      price: 'Free',
+      price: 'Freeto',
       period: 'Forever',
       description: 'Perfect for small schools getting started',
       features: [
@@ -34,7 +34,7 @@ function Pricing() {
     {
       name: 'Professional',
       icon: <Rocket size={32} />,
-      price: '$49',
+      price:'2000',
       period: 'per month',
       description: 'Ideal for growing educational institutions',
       features: [

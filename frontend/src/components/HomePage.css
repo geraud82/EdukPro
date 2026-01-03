@@ -283,7 +283,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #faf5ff 100%);
   overflow: hidden;
-
+   
 }
 
 .hero-section-wrapper::before {
@@ -297,6 +297,7 @@
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0.9;
+ 
 }
 
 /* Hero Section */
@@ -311,13 +312,16 @@
   max-width: 1200px;
   margin: 0 auto;
   overflow: hidden;
-  background-image: url('/images/hero-background.png');
+   background-image: url('/images/hero-background.png');
+
+ 
      
 }
 
 .hero-content {
   max-width: 600px;
   text-align: left;
+
 }
 
 .hero-background {
@@ -328,6 +332,7 @@
   bottom: 0;
   z-index: 0;
   overflow: hidden;
+ 
 }
 
 .hero-shape {
@@ -336,6 +341,7 @@
   filter: blur(80px);
   opacity: 0.3;
   animation: float 20s infinite ease-in-out;
+ 
 }
 
 .hero-shape-1 {
@@ -344,6 +350,7 @@
   background: linear-gradient(135deg, #2563eb, #7c3aed);
   top: -250px;
   right: -250px;
+ 
 }
 
 .hero-shape-2 {
@@ -364,6 +371,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   animation-delay: -10s;
+  
 }
 
 @keyframes float {
@@ -553,7 +561,7 @@
   align-items: center;
   justify-content: center;
   min-height: 500px;
-  background-image: url('/images/hero-background.png');
+  
 }
 
 .hero-image-container {
@@ -564,6 +572,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+   
 }
 
 .hero-background-img {
@@ -573,6 +582,7 @@
   max-height: 650px;
   object-fit: contain;
   animation: heroImageFloat 6s ease-in-out infinite;
+ 
 }
 
 @keyframes heroImageFloat {
@@ -1160,72 +1170,353 @@
 }
 
 /* Responsive Design */
+
+/* Tablets & Medium Screens (769px - 1024px) */
 @media (max-width: 1024px) {
+  /* Hide desktop background image on tablet */
+  .hero-section-wrapper::before {
+    display: none;
+  }
+
+  /* Hero Section adjustments - same as mobile */
   .hero-section {
-    grid-template-columns: 1fr;
     padding: 6rem 1.5rem 3rem;
+    background-image: none;
   }
 
-  /* Hide desktop hero image on mobile, show mobile version */
+  /* Hide desktop hero image */
   .hero-image {
-    display: block;
+    display: none;
   }
 
+  /* Show mobile hero image on tablet */
   .hero-image-mobile {
     display: block;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin: 1.5rem 0 2rem;
   }
 
-  .hero-student-img-mobile {
+  .hero-img-mobile {
     width: 100%;
-    max-width: 280px;
+    max-width: 800px;
     height: auto;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   }
 
+  .hero-content {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  /* Mobile Navigation for tablet */
+  .nav-links {
+    display: none;
+  }
+
+  .nav-mobile-actions {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+
+  .mobile-menu-overlay {
+    display: block;
+  }
+
+  .homepage-nav {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-container {
+    padding: 0 1.5rem;
+  }
+
+  .nav-logo {
+    font-size: 1.25rem;
+  }
+
+  .logo-icon {
+    font-size: 1.75rem;
+  }
+
+  /* Hero text */
   .hero-title {
     font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
   }
 
+  .hero-description {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+  }
+
+  /* Hero buttons */
+  .hero-buttons {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.875rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.95rem 1.75rem;
+    font-size: 1rem;
+  }
+
+  /* Hero stats - 2 columns like mobile */
   .hero-stats {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1.25rem 1rem;
   }
 
+  .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.8125rem;
+  }
+
+  /* Sections */
+  .features-section,
+  .benefits-section,
+  .about-section,
+  .schools-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .cta-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-badge {
+    font-size: 0.875rem;
+    padding: 0.4375rem 0.875rem;
+  }
+
+  .section-title {
+    font-size: 2.25rem;
+    line-height: 1.2;
+  }
+
+  .section-description {
+    font-size: 1.0625rem;
+  }
+
+  /* Features grid - single column like mobile */
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .feature-card {
+    padding: 1.5rem;
+  }
+
+  .feature-icon {
+    font-size: 2.75rem;
+  }
+
+  .feature-title {
+    font-size: 1.375rem;
+  }
+
+  .feature-description {
+    font-size: 0.9375rem;
+  }
+
+  /* Benefits section */
   .benefits-content {
     grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
 
   .benefits-visual {
-    height: 400px;
-  }
-
-  .footer-content {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-
-  .nav-links {
-    gap: 1rem;
-  }
-
-  .nav-link {
     display: none;
+  }
+
+  .benefits-list {
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+  }
+
+  .benefit-item {
+    gap: 0.875rem;
+  }
+
+  .benefit-icon {
+    font-size: 1.875rem;
+    padding: 0.625rem;
+  }
+
+  .benefit-title {
+    font-size: 1.125rem;
+  }
+
+  .benefit-description {
+    font-size: 0.9375rem;
+  }
+
+  /* About section */
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .about-image {
+    order: 2;
+  }
+
+  .about-image-container {
+    height: 350px;
+  }
+
+  .about-text {
+    order: 1;
+  }
+
+  .about-description {
+    font-size: 1.0625rem;
+  }
+
+  .about-highlights {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .about-highlight {
+    font-size: 0.9375rem;
+  }
+
+  /* Schools section - single column like mobile */
+  .schools-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .school-card-home {
+    padding: 1.375rem;
+  }
+
+  .school-card-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .school-card-title {
+    font-size: 1.1875rem;
+  }
+
+  .school-card-desc {
+    font-size: 0.9375rem;
+  }
+
+  .school-card-stats {
+    gap: 1.25rem;
+  }
+
+  .school-stat {
+    font-size: 0.875rem;
+  }
+
+  /* CTA section */
+  .cta-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+
+  .cta-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .cta-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.95rem 1.75rem;
+  }
+
+  /* Footer */
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .footer-column:first-child {
+    grid-column: auto;
+  }
+
+  .footer-description {
+    max-width: 100%;
+    font-size: 0.9375rem;
+  }
+
+  .footer-title {
+    font-size: 1.0625rem;
+  }
+
+  .footer-links a {
+    font-size: 0.9375rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    padding-top: 1.75rem;
+  }
+
+  .footer-copyright {
+    font-size: 0.8125rem;
+  }
+
+  .footer-social {
+    justify-content: center;
+  }
+
+  .social-link {
+    font-size: 0.8125rem;
   }
 }
 
+/* Mobile Phones & Small Tablets (480px - 768px) */
 @media (max-width: 768px) {
   /* Hide desktop background image on mobile */
   .hero-section-wrapper::before {
     display: none;
   }
 
+  /* Hero Section adjustments */
+  .hero-section {
+    padding: 6rem 1.5rem 3rem;
+    background-image: none;
+  }
+
   /* Show mobile hero image */
   .hero-image-mobile {
     display: block;
     text-align: center;
-    margin: 1.5rem 0;
+    margin: 1.5rem 0 2rem;
   }
 
   .hero-img-mobile {
@@ -1233,10 +1524,12 @@
     max-width: 350px;
     height: auto;
     border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   }
 
   .hero-content {
     text-align: center;
+    max-width: 100%;
   }
 
   /* Mobile Navigation */
@@ -1258,6 +1551,11 @@
 
   .homepage-nav {
     background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-container {
+    padding: 0 1rem;
   }
 
   .nav-logo {
@@ -1268,57 +1566,134 @@
     font-size: 1.5rem;
   }
 
+  /* Hero text */
   .hero-title {
-    font-size: 2rem;
+    font-size: 2.125rem;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
   }
 
   .hero-description {
     font-size: 1rem;
+    line-height: 1.6;
     margin-left: auto;
     margin-right: auto;
+    max-width: 100%;
   }
 
+  /* Hero buttons */
   .hero-buttons {
     flex-direction: column;
     justify-content: center;
+    gap: 0.875rem;
+    margin-bottom: 2.5rem;
   }
 
   .hero-btn {
     width: 100%;
     justify-content: center;
+    padding: 0.9375rem 1.75rem;
+    font-size: 0.9375rem;
   }
 
+  /* Hero stats */
   .hero-stats {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+    padding: 1.25rem 1rem;
+  }
+
+  .stat-number {
+    font-size: 1.625rem;
+  }
+
+  .stat-label {
+    font-size: 0.8125rem;
+  }
+
+  /* Sections */
+  .features-section,
+  .benefits-section,
+  .about-section,
+  .schools-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .cta-section {
+    padding: 4rem 1.5rem;
+  }
+
+  .section-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-badge {
+    font-size: 0.8125rem;
+    padding: 0.4375rem 0.875rem;
   }
 
   .section-title {
     font-size: 2rem;
+    line-height: 1.2;
   }
 
+  .section-description {
+    font-size: 1rem;
+  }
+
+  /* Features grid */
   .features-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
-  .cta-title {
-    font-size: 2rem;
+  .feature-card {
+    padding: 1.5rem;
   }
 
-  .footer-content {
-    grid-template-columns: 1fr;
+  .feature-icon {
+    font-size: 2.5rem;
   }
 
-  .footer-bottom {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
+  .feature-title {
+    font-size: 1.25rem;
+  }
+
+  .feature-description {
+    font-size: 0.9375rem;
+  }
+
+  /* Benefits section */
+  .benefits-visual {
+    display: none;
+  }
+
+  .benefits-list {
+    gap: 1.25rem;
+    margin-top: 1.75rem;
+  }
+
+  .benefit-item {
+    gap: 0.875rem;
+  }
+
+  .benefit-icon {
+    font-size: 1.75rem;
+    padding: 0.625rem;
+  }
+
+  .benefit-title {
+    font-size: 1.0625rem;
+  }
+
+  .benefit-description {
+    font-size: 0.875rem;
   }
 
   /* About section for mobile */
   .about-content {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
   .about-image {
@@ -1326,15 +1701,119 @@
   }
 
   .about-image-container {
-    height: 300px;
+    height: 320px;
   }
 
   .about-text {
     order: 1;
   }
 
+  .about-description {
+    font-size: 1rem;
+  }
+
   .about-highlights {
     grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .about-highlight {
+    font-size: 0.9375rem;
+  }
+
+  /* CTA section */
+  .cta-title {
+    font-size: 2.125rem;
+    line-height: 1.2;
+  }
+
+  .cta-description {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .cta-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.9375rem 1.75rem;
+  }
+
+  /* Footer */
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .footer-column:first-child {
+    grid-column: auto;
+  }
+
+  .footer-description {
+    max-width: 100%;
+    font-size: 0.9375rem;
+  }
+
+  .footer-title {
+    font-size: 1.0625rem;
+  }
+
+  .footer-links a {
+    font-size: 0.9375rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+    padding-top: 1.75rem;
+  }
+
+  .footer-copyright {
+    font-size: 0.8125rem;
+  }
+
+  .footer-social {
+    justify-content: center;
+  }
+
+  .social-link {
+    font-size: 0.8125rem;
+  }
+
+  /* Schools section mobile */
+  .schools-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .school-card-home {
+    padding: 1.375rem;
+  }
+
+  .school-card-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .school-card-title {
+    font-size: 1.1875rem;
+  }
+
+  .school-card-desc {
+    font-size: 0.9375rem;
+  }
+
+  .school-card-stats {
+    gap: 1.25rem;
+  }
+
+  .school-stat {
+    font-size: 0.875rem;
   }
 }
 
@@ -1672,5 +2151,344 @@
 
   .hero-stats {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ===========================
+   Schools Section Styles
+   =========================== */
+
+.schools-section {
+  padding: 6rem 2rem;
+  background: white;
+}
+
+.school-search-bar {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.search-input-wrapper:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.search-icon {
+  color: #9ca3af;
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+}
+
+.school-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: #111827;
+  background: transparent;
+}
+
+.school-search-input::placeholder {
+  color: #9ca3af;
+}
+
+.search-clear-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.search-clear-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.schools-count {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.schools-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.no-schools-found {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6b7280;
+}
+
+.no-schools-found svg {
+  color: #d1d5db;
+  margin-bottom: 1rem;
+}
+
+.no-schools-found h3 {
+  font-size: 1.5rem;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.no-schools-found p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.reset-search-btn {
+  padding: 0.75rem 1.5rem;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-search-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+.schools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.school-card-home {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.school-card-home:hover {
+  border-color: #2563eb;
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1);
+}
+
+.school-card-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+  margin-bottom: 1rem;
+}
+
+.school-card-content {
+  flex: 1;
+  margin-bottom: 1.25rem;
+}
+
+.school-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+.school-card-location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.school-card-location svg {
+  flex-shrink: 0;
+}
+
+.school-card-desc {
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.school-card-stats {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.school-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.school-stat svg {
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.school-card-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.school-card-home:hover .school-card-btn {
+  transform: translateX(5px);
+}
+
+.schools-view-all {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.view-all-schools-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: white;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-all-schools-btn:hover {
+  background: #2563eb;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+/* Responsive Styles for Schools Section */
+@media (max-width: 768px) {
+  .schools-section {
+    padding: 3rem 1rem;
+  }
+
+  .schools-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .school-search-input {
+    font-size: 0.9rem;
+  }
+
+  .school-card-home {
+    padding: 1.25rem;
+  }
+
+  .school-card-title {
+    font-size: 1.125rem;
+  }
+
+  .school-card-stats {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .school-search-bar {
+    padding: 0 0.5rem;
+  }
+
+  .search-input-wrapper {
+    padding: 0.625rem 1rem;
+  }
+
+  .school-search-input {
+    font-size: 0.875rem;
+  }
+
+  .school-card-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .school-card-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .school-card-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .view-all-schools-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

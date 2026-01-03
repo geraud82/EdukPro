@@ -51,7 +51,7 @@ function Sidebar({ userRole, userName, userEmail, currentTab, onTabChange, tabs 
     if (window.confirm('Are you sure you want to logout?')) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      navigate('/login');
+      navigate('/');
     }
   };
 
