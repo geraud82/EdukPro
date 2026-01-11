@@ -1878,8 +1878,8 @@ function ParentLayout() {
         )}
 
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h2 className="title" style={{ marginBottom: '0.5rem' }}>👨‍👩‍👧‍👦 Parent Dashboard</h2>
-          <p style={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '0.95rem' }}>Manage your children, classes and school fees</p>
+          <h2 className="title" style={{ marginBottom: '0.5rem', color: '#ffffff', textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)' }}>👨‍👩‍👧‍👦 Parent Dashboard</h2>
+          <p style={{ color: '#ffffff', fontSize: '0.95rem', textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)' }}>Manage your children, classes and school fees</p>
         </div>
 
       {/* Overview Stats */}
@@ -1911,32 +1911,37 @@ function ParentLayout() {
         <button
           onClick={() => setTab('children')}
           className={`tab-button ${tab === 'children' ? 'active' : ''}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          👶 Children
+          <Baby size={18} /> Children
         </button>
         <button
           onClick={() => setTab('fees')}
           className={`tab-button ${tab === 'fees' ? 'active' : ''}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          💰 Fees
+          <DollarSign size={18} /> Fees
         </button>
         <button
           onClick={() => setTab('schools')}
           className={`tab-button ${tab === 'schools' ? 'active' : ''}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          🏫 Schools
+          <School size={18} /> Schools
         </button>
         <button
           onClick={() => setTab('classes')}
           className={`tab-button ${tab === 'classes' ? 'active' : ''}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          📚 Classes
+          <BookOpen size={18} /> Classes
         </button>
         <button
           onClick={() => setTab('messages')}
           className={`tab-button ${tab === 'messages' ? 'active' : ''}`}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
-          💬 Messages
+          <MessageCircle size={18} /> Messages
         </button>
       </div>
 
@@ -2874,14 +2879,30 @@ function ParentLayout() {
 
       {/* SCHOOLS TAB */}
       {tab === 'schools' && (
-        <SchoolBrowser 
-          students={students}
-          onSelectSchool={(school, classes) => {
-            // When a school is selected for enrollment, we can show an enrollment modal
-            // or redirect to a specific enrollment flow
-            alert(`Selected ${school.name}. Please select a class from the "Available Classes" section to enroll your child.`);
-          }}
-        />
+        <>
+          <div style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            borderRadius: '1rem',
+            padding: '1.5rem',
+            marginBottom: '1rem',
+            textAlign: 'center',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+          }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏫</div>
+            <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#111827' }}>Browse Schools</h3>
+            <p style={{ color: '#4b5563', fontSize: '0.95rem' }}>
+              Find and enroll your child in the perfect school
+            </p>
+          </div>
+          <SchoolBrowser 
+            students={students}
+            onSelectSchool={(school, classes) => {
+              // When a school is selected for enrollment, we can show an enrollment modal
+              // or redirect to a specific enrollment flow
+              alert(`Selected ${school.name}. Please select a class from the "Available Classes" section to enroll your child.`);
+            }}
+          />
+        </>
       )}
 
       {/* CLASSES TAB */}
@@ -6311,8 +6332,8 @@ function SchoolSearch({ students }) {
 
   return (
     <div className="card">
-      <h3>🏫 Browse Schools</h3>
-      <p style={{ fontSize: '0.9rem', color: 'var(--text-secondry)', marginBottom: '1rem' }}>
+      <h3 style={{ color: '#111827' }}>🏫 Browse Schools</h3>
+      <p style={{ fontSize: '0.9rem', color: '#4b5563', marginBottom: '1rem' }}>
         Find schools and enroll your children in their classes
       </p>
 

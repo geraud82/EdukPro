@@ -11,13 +11,16 @@
 
 .school-browser-header h2 {
   font-size: 2rem;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
 }
 
 .school-browser-header p {
-  color: #666;
+  color: #ffffff;
   font-size: 1.1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .search-bar {
@@ -62,8 +65,10 @@
 .schools-count {
   text-align: center;
   margin-bottom: 25px;
-  color: #666;
+  color: #ffffff;
   font-size: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
 }
 
 .schools-grid {
@@ -226,8 +231,10 @@
 
 .school-detail-header h2 {
   font-size: 2.2rem;
-  color: #333;
+  color: #ffffff;
   margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
 }
 
 .enroll-button {
