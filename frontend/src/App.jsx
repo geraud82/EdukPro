@@ -1491,6 +1491,7 @@ function ParentLayout() {
   const [loadingStudents, setLoadingStudents] = useState(true);
   const [studentError, setStudentError] = useState('');
   const [showStudentForm, setShowStudentForm] = useState(false);
+  const [editingStudentId, setEditingStudentId] = useState(null);
   const [studentForm, setStudentForm] = useState({
     firstName: '',
     lastName: '',
@@ -1707,8 +1708,14 @@ function ParentLayout() {
         emergencyPhone: studentForm.emergencyPhone || null,
       };
 
-      const res = await fetch(`${API_URL}/api/students`, {
-        method: 'POST',
+      // Check if we're editing or creating
+      const url = editingStudentId 
+        ? `${API_URL}/api/students/${editingStudentId}`
+        : `${API_URL}/api/students`;
+      const method = editingStudentId ? 'PATCH' : 'POST';
+
+      const res = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -1718,10 +1725,18 @@ function ParentLayout() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.message || 'Failed to add student');
+        throw new Error(data.message || `Failed to ${editingStudentId ? 'update' : 'add'} student`);
       }
 
-      setStudents(prev => [data, ...prev]);
+      if (editingStudentId) {
+        // Update existing student in the list
+        setStudents(prev => prev.map(s => s.id === editingStudentId ? data : s));
+        alert('Child information updated successfully!');
+      } else {
+        // Add new student to the list
+        setStudents(prev => [data, ...prev]);
+        alert('Child added successfully! You can now enroll them in classes.');
+      }
       
       // Reset form
       setStudentForm({
@@ -1740,8 +1755,7 @@ function ParentLayout() {
         emergencyPhone: '',
       });
       setShowStudentForm(false);
-      
-      alert('Child added successfully! You can now enroll them in classes.');
+      setEditingStudentId(null);
     } catch (err) {
       setStudentError(err.message);
     }
@@ -1947,11 +1961,27 @@ function ParentLayout() {
           ) : (
             <div className="card" style={{ marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3 style={{ margin: 0 }}>Add a Child</h3>
+                <h3 style={{ margin: 0 }}>{editingStudentId ? '✏️ Edit Child Information' : '➕ Add a Child'}</h3>
                 <button 
                   onClick={() => {
                     setShowStudentForm(false);
                     setStudentError('');
+                    setEditingStudentId(null);
+                    setStudentForm({
+                      firstName: '',
+                      lastName: '',
+                      dateOfBirth: '',
+                      gender: '',
+                      address: '',
+                      city: '',
+                      state: '',
+                      country: '',
+                      postalCode: '',
+                      phone: '',
+                      email: '',
+                      emergencyContact: '',
+                      emergencyPhone: '',
+                    });
                   }}
                   style={{
                     background: 'none',
@@ -2440,7 +2470,7 @@ function ParentLayout() {
 
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
                   <button className="btn" type="submit" style={{ flex: 1, padding: '0.75rem' }}>
-                    ✨ Add Child
+                    {editingStudentId ? '💾 Update Child' : '✨ Add Child'}
                   </button>
                   <button 
                     type="button"
@@ -2448,6 +2478,22 @@ function ParentLayout() {
                     onClick={() => {
                       setShowStudentForm(false);
                       setStudentError('');
+                      setEditingStudentId(null);
+                      setStudentForm({
+                        firstName: '',
+                        lastName: '',
+                        dateOfBirth: '',
+                        gender: '',
+                        address: '',
+                        city: '',
+                        state: '',
+                        country: '',
+                        postalCode: '',
+                        phone: '',
+                        email: '',
+                        emergencyContact: '',
+                        emergencyPhone: '',
+                      });
                     }}
                     style={{ padding: '0.75rem 1.5rem', backgroundColor: '#6b7280' }}
                   >
@@ -2522,8 +2568,26 @@ function ParentLayout() {
                       <button
                         className="btn"
                         onClick={() => {
-                          // TODO: Add edit student functionality
-                          alert('Edit student functionality - Coming soon!');
+                          // Pre-fill form with student data for editing
+                          setStudentForm({
+                            firstName: s.firstName || '',
+                            lastName: s.lastName || '',
+                            dateOfBirth: s.dateOfBirth ? s.dateOfBirth.split('T')[0] : '',
+                            gender: s.gender || '',
+                            address: s.address || '',
+                            city: s.city || '',
+                            state: s.state || '',
+                            country: s.country || '',
+                            postalCode: s.postalCode || '',
+                            phone: s.phone || '',
+                            email: s.email || '',
+                            emergencyContact: s.emergencyContact || '',
+                            emergencyPhone: s.emergencyPhone || '',
+                          });
+                          setEditingStudentId(s.id);
+                          setShowStudentForm(true);
+                          setStudentError('');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
                         style={{
                           padding: '0.5rem 1rem',

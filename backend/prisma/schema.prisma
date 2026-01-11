@@ -51,6 +51,7 @@ model School {
   students Student[]
   classes  Class[]
   fees     Fee[]
+  posts    SchoolPost[]
 }
 
 model User {
@@ -79,6 +80,9 @@ model User {
   
   // Notifications
   notifications Notification[]
+  
+  // School posts
+  schoolPosts SchoolPost[]
 }
 
 model Student {
@@ -291,5 +295,28 @@ model Notification {
   createdAt   DateTime @default(now())
 
   @@index([userId, isRead])
+  @@index([createdAt])
+}
+
+model SchoolPost {
+  id          Int      @id @default(autoincrement())
+  schoolId    Int
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  
+  type        String   // 'announcement', 'event', 'news', 'photo'
+  title       String
+  content     String   @db.Text
+  imageUrl    String?  // For photos or featured images
+  eventDate   DateTime? // For events
+  
+  authorId    Int
+  author      User     @relation(fields: [authorId], references: [id])
+  
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([schoolId, isPublished])
+  @@index([type])
   @@index([createdAt])
 }

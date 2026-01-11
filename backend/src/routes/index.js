@@ -16,6 +16,8 @@ const feeRoutes = require('./fee.routes');
 const chatRoutes = require('./chat.routes');
 const notificationRoutes = require('./notification.routes');
 const ownerRoutes = require('./owner.routes');
+const postRoutes = require('./post.routes');
+const adminRoutes = require('./admin.routes');
 
 // Mount routes
 router.use('/auth', authRoutes);
@@ -27,6 +29,8 @@ router.use('/', feeRoutes); // Mounts /fees and /invoices
 router.use('/chat', chatRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/owner', ownerRoutes);
+router.use('/admin', adminRoutes); // Mounts admin routes
+router.use('/', postRoutes); // Mounts posts routes
 
 // Profile routes (need auth)
 const authController = require('../controllers/authController');
