@@ -4861,7 +4861,45 @@ function AdminLayout() {
                     <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', paddingTop: '0.75rem', borderTop: '1px solid #e5e7eb' }}>
                       <button
                         className="btn"
-                        onClick={() => setTab('classes')}
+                        onClick={async () => {
+                          // Show class selection dialog
+                          const availableClasses = classes.filter(c => 
+                            !teacher.teacherClasses?.some(tc => tc.classId === c.id)
+                          );
+                          
+                          if (availableClasses.length === 0) {
+                            alert('This teacher is already assigned to all available classes.');
+                            return;
+                          }
+                          
+                          const classOptions = availableClasses.map(c => 
+                            `${c.id}: ${c.name} ${c.level ? `(${c.level})` : ''}`
+                          ).join('\n');
+                          
+                          const classId = prompt(
+                            `Select a class to assign ${teacher.name} to:\n\n${classOptions}\n\nEnter class ID:`
+                          );
+                          
+                          if (!classId) return;
+                          
+                          try {
+                            const token = localStorage.getItem('token');
+                            const res = await fetch(
+                              `${API_URL}/api/teachers/${teacher.id}/classes/${classId}`,
+                              {
+                                method: 'POST',
+                                headers: { Authorization: `Bearer ${token}` },
+                              }
+                            );
+                            const data = await res.json();
+                            if (!res.ok) throw new Error(data.message);
+                            
+                            alert(`Successfully assigned ${teacher.name} to the class!`);
+                            fetchTeachers(); // Refresh teacher list
+                          } catch (err) {
+                            alert('Error: ' + err.message);
+                          }
+                        }}
                         style={{ padding: '0.5rem 1rem', fontSize: '0.9rem', backgroundColor: '#10b981' }}
                       >
                         📚 Assign to Class

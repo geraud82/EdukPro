@@ -83,8 +83,9 @@ router.get('/students', studentController.getAllStudents);
  * GET /api/admin/teachers
  */
 router.get('/teachers', async (req, res, next) => {
-  // Get all users with teacher role
+  // Get all users with teacher role from admin's school
   req.query.role = 'teacher';
+  req.query.schoolId = req.user.schoolId; // Filter by admin's school
   return ownerController.getAllUsers(req, res, next);
 });
 
@@ -93,8 +94,9 @@ router.get('/teachers', async (req, res, next) => {
  * POST /api/admin/teachers
  */
 router.post('/teachers', async (req, res, next) => {
-  // Ensure role is set to teacher
+  // Ensure role is set to teacher and use admin's schoolId
   req.body.role = 'teacher';
+  req.body.schoolId = req.user.schoolId; // Use admin's school
   return ownerController.createUser(req, res, next);
 });
 

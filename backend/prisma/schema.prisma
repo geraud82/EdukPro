@@ -71,8 +71,8 @@ model User {
   // Parent ↔ children
   children Student[]
 
-  // Teacher ↔ classes
-  teacherClasses Class[] @relation("TeacherClasses")
+  // Teacher ↔ classes (many-to-many)
+  teacherClasses ClassTeacher[]
 
   // Chat relations
   sentMessages     Message[] @relation("SentMessages")
@@ -203,9 +203,8 @@ model Class {
   schoolId Int
   school   School @relation(fields: [schoolId], references: [id])
 
-  // Teacher assignment
-  teacherId Int?
-  teacher   User? @relation("TeacherClasses", fields: [teacherId], references: [id])
+  // Many-to-many relationship with teachers
+  teachers ClassTeacher[]
 
   enrollmentFee Fee? @relation("EnrollmentFee", fields: [enrollmentFeeId], references: [id])
   tuitionFee    Fee? @relation("TuitionFee", fields: [tuitionFeeId], references: [id])
@@ -217,7 +216,6 @@ model Class {
   @@index([enrollmentFeeId])
   @@index([tuitionFeeId])
   @@index([schoolId])
-  @@index([teacherId])
 }
 
 
@@ -233,6 +231,20 @@ model Enrollment {
 
   @@unique([studentId, classId]) // prevent duplicate enrollments
   @@index([classId])
+}
+
+// Many-to-many join table for teachers and classes
+model ClassTeacher {
+  id        Int      @id @default(autoincrement())
+  classId   Int
+  teacherId Int
+  class     Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacher   User     @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  assignedAt DateTime @default(now())
+
+  @@unique([classId, teacherId]) // Prevent duplicate assignments
+  @@index([classId])
+  @@index([teacherId])
 }
 
 model Invoice {

@@ -18,6 +18,7 @@ const notificationRoutes = require('./notification.routes');
 const ownerRoutes = require('./owner.routes');
 const postRoutes = require('./post.routes');
 const adminRoutes = require('./admin.routes');
+const teacherRoutes = require('./teacher.routes');
 
 // Mount routes
 router.use('/auth', authRoutes);
@@ -30,6 +31,7 @@ router.use('/chat', chatRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/owner', ownerRoutes);
 router.use('/admin', adminRoutes); // Mounts admin routes
+router.use('/teachers', teacherRoutes); // Mounts teacher routes
 router.use('/', postRoutes); // Mounts posts routes
 
 // Profile routes (need auth)

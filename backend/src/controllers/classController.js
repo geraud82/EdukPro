@@ -25,7 +25,11 @@ const getAllClasses = asyncHandler(async (req, res) => {
     where,
     include: {
       school: { select: { id: true, name: true } },
-      teacher: { select: { id: true, name: true, email: true } },
+      teachers: {
+        include: {
+          teacher: { select: { id: true, name: true, email: true } },
+        },
+      },
       enrollmentFee: true,
       tuitionFee: true,
       _count: { select: { enrollments: true } },
@@ -47,7 +51,11 @@ const getClassById = asyncHandler(async (req, res) => {
     where: { id: Number(id) },
     include: {
       school: true,
-      teacher: { select: { id: true, name: true, email: true } },
+      teachers: {
+        include: {
+          teacher: { select: { id: true, name: true, email: true } },
+        },
+      },
       enrollmentFee: true,
       tuitionFee: true,
       enrollments: {
@@ -70,7 +78,7 @@ const getClassById = asyncHandler(async (req, res) => {
  * POST /api/classes
  */
 const createClass = asyncHandler(async (req, res) => {
-  const { name, level, description, schoolId, teacherId, enrollmentFeeId, tuitionFeeId } = req.body;
+  const { name, level, description, schoolId, teacherIds, enrollmentFeeId, tuitionFeeId } = req.body;
 
   if (!name) {
     throw new ApiError(400, 'Class name is required');
@@ -134,13 +142,21 @@ const createClass = asyncHandler(async (req, res) => {
       level,
       description,
       schoolId: targetSchoolId,
-      teacherId: teacherId ? Number(teacherId) : null,
       enrollmentFeeId: enrollmentFeeId ? Number(enrollmentFeeId) : null,
       tuitionFeeId: tuitionFeeId ? Number(tuitionFeeId) : null,
+      teachers: teacherIds && Array.isArray(teacherIds) && teacherIds.length > 0 ? {
+        create: teacherIds.map(tid => ({
+          teacherId: Number(tid),
+        })),
+      } : undefined,
     },
     include: {
       school: { select: { id: true, name: true } },
-      teacher: { select: { id: true, name: true } },
+      teachers: {
+        include: {
+          teacher: { select: { id: true, name: true, email: true } },
+        },
+      },
       enrollmentFee: true,
       tuitionFee: true,
     },
@@ -155,7 +171,7 @@ const createClass = asyncHandler(async (req, res) => {
  */
 const updateClass = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, level, description, teacherId, enrollmentFeeId, tuitionFeeId } = req.body;
+  const { name, level, description, teacherIds, enrollmentFeeId, tuitionFeeId } = req.body;
 
   // Verify class exists and user has access
   const existingClass = await prisma.class.findUnique({
@@ -199,16 +215,37 @@ const updateClass = asyncHandler(async (req, res) => {
   if (name) updateData.name = name;
   if (level !== undefined) updateData.level = level;
   if (description !== undefined) updateData.description = description;
-  if (teacherId !== undefined) updateData.teacherId = teacherId ? Number(teacherId) : null;
   if (enrollmentFeeId !== undefined) updateData.enrollmentFeeId = enrollmentFeeId ? Number(enrollmentFeeId) : null;
   if (tuitionFeeId !== undefined) updateData.tuitionFeeId = tuitionFeeId ? Number(tuitionFeeId) : null;
+
+  // Handle teacher assignments separately if provided
+  if (teacherIds !== undefined && Array.isArray(teacherIds)) {
+    // Delete existing assignments
+    await prisma.classTeacher.deleteMany({
+      where: { classId: Number(id) },
+    });
+
+    // Create new assignments
+    if (teacherIds.length > 0) {
+      await prisma.classTeacher.createMany({
+        data: teacherIds.map(tid => ({
+          classId: Number(id),
+          teacherId: Number(tid),
+        })),
+      });
+    }
+  }
 
   const classData = await prisma.class.update({
     where: { id: Number(id) },
     data: updateData,
     include: {
       school: { select: { id: true, name: true } },
-      teacher: { select: { id: true, name: true } },
+      teachers: {
+        include: {
+          teacher: { select: { id: true, name: true, email: true } },
+        },
+      },
       enrollmentFee: true,
       tuitionFee: true,
     },
