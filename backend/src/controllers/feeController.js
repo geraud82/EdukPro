@@ -43,8 +43,35 @@ const getAllFees = asyncHandler(async (req, res) => {
 const createFee = asyncHandler(async (req, res) => {
   const { name, amount, currency, description, schoolId } = req.body;
 
-  if (!name || !amount || !schoolId) {
-    throw new ApiError(400, 'Name, amount, and schoolId are required');
+  if (!name || !amount) {
+    throw new ApiError(400, 'Name and amount are required');
+  }
+
+  // Determine the schoolId to use
+  let targetSchoolId = schoolId ? Number(schoolId) : null;
+  
+  // Verify school access based on role
+  if (req.user.role === 'owner') {
+    // Owner can create fees for any school, but schoolId must be provided
+    if (!targetSchoolId) {
+      throw new ApiError(400, 'School ID is required for owner role');
+    }
+  } else if (req.user.role === 'admin' || req.user.role === 'school_admin') {
+    // Admin can only create fees for their own school
+    if (!req.user.schoolId) {
+      throw new ApiError(400, 'Admin must be associated with a school first');
+    }
+    
+    // If schoolId is provided, it must match admin's school
+    if (targetSchoolId && targetSchoolId !== req.user.schoolId) {
+      throw new ApiError(403, 'Access denied: You can only create fees for your own school');
+    }
+    
+    // Use admin's schoolId
+    targetSchoolId = req.user.schoolId;
+  } else {
+    // Other roles cannot create fees
+    throw new ApiError(403, 'Insufficient permissions to create fees');
   }
 
   const fee = await prisma.fee.create({
@@ -53,7 +80,7 @@ const createFee = asyncHandler(async (req, res) => {
       amount: Number(amount),
       currency: currency || 'XOF',
       description,
-      schoolId: Number(schoolId),
+      schoolId: targetSchoolId,
     },
     include: {
       school: { select: { id: true, name: true } },
@@ -143,9 +170,9 @@ const getAllInvoices = asyncHandler(async (req, res) => {
  * GET /api/invoices/my
  */
 const getMyInvoices = asyncHandler(async (req, res) => {
-  // Only parents can access this route
+  // Only parents can access this route - return empty array for others
   if (req.user.role !== 'parent') {
-    throw new ApiError(403, 'This endpoint is only available for parents');
+    return res.json([]);
   }
 
   const invoices = await prisma.invoice.findMany({

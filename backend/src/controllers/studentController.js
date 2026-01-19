@@ -55,9 +55,9 @@ const getAllStudents = asyncHandler(async (req, res) => {
  * GET /api/students/my
  */
 const getMyStudents = asyncHandler(async (req, res) => {
-  // Only parents can access this route
+  // Only parents can access this route - return empty array for others
   if (req.user.role !== 'parent') {
-    throw new ApiError(403, 'This endpoint is only available for parents');
+    return res.json([]);
   }
 
   const students = await prisma.student.findMany({

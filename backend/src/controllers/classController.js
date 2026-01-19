@@ -70,15 +70,62 @@ const getClassById = asyncHandler(async (req, res) => {
  * POST /api/classes
  */
 const createClass = asyncHandler(async (req, res) => {
-  const { name, level, description, schoolId, teacherId, enrollmentFee, tuitionFee } = req.body;
+  const { name, level, description, schoolId, teacherId, enrollmentFeeId, tuitionFeeId } = req.body;
 
-  if (!name || !schoolId) {
-    throw new ApiError(400, 'Name and schoolId are required');
+  if (!name) {
+    throw new ApiError(400, 'Class name is required');
   }
 
-  // Verify school access
-  if (req.user.role !== 'owner' && req.user.schoolId !== Number(schoolId)) {
-    throw new ApiError(403, 'Access denied to this school');
+  // Determine the schoolId to use
+  let targetSchoolId = schoolId ? Number(schoolId) : null;
+  
+  // Verify school access based on role
+  if (req.user.role === 'owner') {
+    // Owner can create classes for any school, but schoolId must be provided
+    if (!targetSchoolId) {
+      throw new ApiError(400, 'School ID is required');
+    }
+  } else if (req.user.role === 'admin' || req.user.role === 'school_admin') {
+    // Admin can only create classes for their own school
+    if (!req.user.schoolId) {
+      throw new ApiError(400, 'Admin must be associated with a school first');
+    }
+    
+    // If schoolId is provided, it must match admin's school
+    if (targetSchoolId && targetSchoolId !== req.user.schoolId) {
+      throw new ApiError(403, 'Access denied: You can only create classes for your own school');
+    }
+    
+    // Use admin's schoolId
+    targetSchoolId = req.user.schoolId;
+  } else {
+    // Other roles cannot create classes
+    throw new ApiError(403, 'Insufficient permissions to create classes');
+  }
+
+  // Validate fee IDs if provided
+  if (enrollmentFeeId) {
+    const fee = await prisma.fee.findUnique({
+      where: { id: Number(enrollmentFeeId) },
+    });
+    if (!fee) {
+      throw new ApiError(404, 'Enrollment fee not found');
+    }
+    if (fee.schoolId !== targetSchoolId) {
+      throw new ApiError(403, 'Enrollment fee does not belong to this school');
+    }
+  }
+
+  if (tuitionFeeId) {
+    const fee = await prisma.fee.findUnique({
+      where: { id: Number(tuitionFeeId) },
+    });
+    if (!fee) {
+      throw new ApiError(404, 'Tuition fee not found');
+    }
+    if (fee.schoolId !== targetSchoolId) {
+      throw new ApiError(403, 'Tuition fee does not belong to this school');
+    }
   }
 
   const classData = await prisma.class.create({
@@ -86,45 +133,11 @@ const createClass = asyncHandler(async (req, res) => {
       name,
       level,
       description,
-      schoolId: Number(schoolId),
+      schoolId: targetSchoolId,
       teacherId: teacherId ? Number(teacherId) : null,
+      enrollmentFeeId: enrollmentFeeId ? Number(enrollmentFeeId) : null,
+      tuitionFeeId: tuitionFeeId ? Number(tuitionFeeId) : null,
     },
-    include: {
-      school: { select: { id: true, name: true } },
-      teacher: { select: { id: true, name: true } },
-    },
-  });
-
-  // Create fees if provided
-  if (enrollmentFee) {
-    await prisma.fee.create({
-      data: {
-        name: `${name} - Enrollment Fee`,
-        amount: Number(enrollmentFee.amount),
-        currency: enrollmentFee.currency || 'XOF',
-        type: 'enrollment',
-        schoolId: Number(schoolId),
-        classEnrollmentFeeId: classData.id,
-      },
-    });
-  }
-
-  if (tuitionFee) {
-    await prisma.fee.create({
-      data: {
-        name: `${name} - Tuition Fee`,
-        amount: Number(tuitionFee.amount),
-        currency: tuitionFee.currency || 'XOF',
-        type: 'tuition',
-        schoolId: Number(schoolId),
-        classTuitionFeeId: classData.id,
-      },
-    });
-  }
-
-  // Re-fetch with fees
-  const result = await prisma.class.findUnique({
-    where: { id: classData.id },
     include: {
       school: { select: { id: true, name: true } },
       teacher: { select: { id: true, name: true } },
@@ -133,7 +146,7 @@ const createClass = asyncHandler(async (req, res) => {
     },
   });
 
-  res.status(201).json(result);
+  res.status(201).json(classData);
 });
 
 /**
@@ -142,7 +155,7 @@ const createClass = asyncHandler(async (req, res) => {
  */
 const updateClass = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, level, description, teacherId } = req.body;
+  const { name, level, description, teacherId, enrollmentFeeId, tuitionFeeId } = req.body;
 
   // Verify class exists and user has access
   const existingClass = await prisma.class.findUnique({
@@ -157,14 +170,42 @@ const updateClass = asyncHandler(async (req, res) => {
     throw new ApiError(403, 'Access denied');
   }
 
+  // Validate fee IDs if provided
+  if (enrollmentFeeId !== undefined && enrollmentFeeId !== null && enrollmentFeeId !== '') {
+    const fee = await prisma.fee.findUnique({
+      where: { id: Number(enrollmentFeeId) },
+    });
+    if (!fee) {
+      throw new ApiError(404, 'Enrollment fee not found');
+    }
+    if (fee.schoolId !== existingClass.schoolId) {
+      throw new ApiError(403, 'Enrollment fee does not belong to this school');
+    }
+  }
+
+  if (tuitionFeeId !== undefined && tuitionFeeId !== null && tuitionFeeId !== '') {
+    const fee = await prisma.fee.findUnique({
+      where: { id: Number(tuitionFeeId) },
+    });
+    if (!fee) {
+      throw new ApiError(404, 'Tuition fee not found');
+    }
+    if (fee.schoolId !== existingClass.schoolId) {
+      throw new ApiError(403, 'Tuition fee does not belong to this school');
+    }
+  }
+
+  const updateData = {};
+  if (name) updateData.name = name;
+  if (level !== undefined) updateData.level = level;
+  if (description !== undefined) updateData.description = description;
+  if (teacherId !== undefined) updateData.teacherId = teacherId ? Number(teacherId) : null;
+  if (enrollmentFeeId !== undefined) updateData.enrollmentFeeId = enrollmentFeeId ? Number(enrollmentFeeId) : null;
+  if (tuitionFeeId !== undefined) updateData.tuitionFeeId = tuitionFeeId ? Number(tuitionFeeId) : null;
+
   const classData = await prisma.class.update({
     where: { id: Number(id) },
-    data: {
-      ...(name && { name }),
-      ...(level !== undefined && { level }),
-      ...(description !== undefined && { description }),
-      ...(teacherId !== undefined && { teacherId: teacherId ? Number(teacherId) : null }),
-    },
+    data: updateData,
     include: {
       school: { select: { id: true, name: true } },
       teacher: { select: { id: true, name: true } },

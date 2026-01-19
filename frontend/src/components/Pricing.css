@@ -279,10 +279,7 @@
   gap: 0.5rem;
 }
 
-.faq-question::before {
-  content: "💡";
-  font-size: 1.5rem;
-}
+/* Icon will be added via Lucide React component in JSX instead of CSS pseudo-element */
 
 .faq-answer {
   font-size: 0.95rem;

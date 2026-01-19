@@ -150,14 +150,24 @@ function SchoolInfo() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Failed to create school');
 
+      // If backend returned a new token, update it (for admin users)
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+
       // Update localStorage with new school assignment
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      user.schoolId = data.id;
+      user.schoolId = data.school?.id || data.id;
       localStorage.setItem('user', JSON.stringify(user));
 
-      setSchool(data);
+      setSchool(data.school || data);
       setError('');
-      setUpdateSuccess('School created successfully!');
+      setUpdateSuccess(data.message || 'School created successfully! You can now create classes and manage your school.');
+      
+      // Reload the page to refresh all data with the new token
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (err) {
       setUpdateError(err.message);
     } finally {

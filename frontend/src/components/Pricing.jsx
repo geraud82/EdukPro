@@ -4,7 +4,8 @@ import {
   Rocket, 
   Building2, 
   Check, 
-  Sparkles 
+  Sparkles,
+  Lightbulb 
 } from 'lucide-react';
 import './Pricing.css';
 
@@ -202,7 +203,7 @@ function Pricing() {
           <div className="faq-grid">
             {faqs.map((faq, index) => (
               <div key={index} className="faq-item">
-                <h4 className="faq-question">{faq.question}</h4>
+                <h4 className="faq-question"><Lightbulb size={24} style={{ color: '#f59e0b', flexShrink: 0 }} />{faq.question}</h4>
                 <p className="faq-answer">{faq.answer}</p>
               </div>
             ))}

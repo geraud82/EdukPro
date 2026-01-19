@@ -734,6 +734,19 @@ li:hover {
   }
 }
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
 /* Print styles */
 @media print {
   .bottom-nav,

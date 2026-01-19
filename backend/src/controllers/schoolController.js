@@ -4,6 +4,7 @@
 
 const { PrismaClient } = require('@prisma/client');
 const { ApiError, asyncHandler } = require('../middleware/errorHandler');
+const { createToken } = require('../middleware/auth');
 
 const prisma = new PrismaClient();
 
@@ -100,11 +101,20 @@ const createSchool = asyncHandler(async (req, res) => {
     },
   });
 
-  // Link admin to school
+  // Link admin to school and return new token with schoolId
   if (req.user.role === 'admin') {
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: req.user.id },
       data: { schoolId: school.id },
+    });
+    
+    // Generate new token with updated schoolId
+    const token = createToken(updatedUser);
+    
+    return res.status(201).json({
+      school,
+      token,
+      message: 'School created successfully. Your session has been updated.',
     });
   }
 

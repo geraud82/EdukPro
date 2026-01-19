@@ -17,7 +17,42 @@ import {
   Building2,
   UserCheck,
   UsersRound,
-  ShieldCheck
+  ShieldCheck,
+  BabyIcon,
+  Compass,
+  Home,
+  Lock,
+  Sparkles,
+  Eye,
+  EyeOff,
+  AlertTriangle,
+  RefreshCw,
+  Crown,
+  MapPin,
+  Plus,
+  Target,
+  Edit,
+  Trash2,
+  Paperclip,
+  FileText,
+  CreditCard,
+  Heart,
+  ClipboardList,
+  Save,
+  Clock,
+  CheckCircle,
+  Phone,
+  Mail,
+  Globe,
+  Key,
+  Info,
+  Search,
+  Lightbulb,
+  X,
+  ArrowLeft,
+  ArrowRight,
+  Calendar,
+  Loader
 } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import SchoolInfo from './components/SchoolInfo';
@@ -64,12 +99,12 @@ function NotFoundPage() {
         animation: 'fadeIn 0.5s ease-in'
       }}>
         <div style={{ 
-          fontSize: '8rem', 
+          display: 'flex',
+          justifyContent: 'center',
           marginBottom: '1rem',
           filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))',
-          lineHeight: 1
         }}>
-          🎓
+          <GraduationCap size={128} color="#ffffff" />
         </div>
         
         <div style={{
@@ -111,11 +146,12 @@ function NotFoundPage() {
         padding: '2rem'
       }}>
         <div style={{ 
-          fontSize: '3rem', 
+          display: 'flex',
+          justifyContent: 'center',
           marginBottom: '1.5rem',
           filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'
         }}>
-          🧭
+          <Compass size={48} color="var(--primary-color)" />
         </div>
         
         <h3 style={{ 
@@ -170,7 +206,7 @@ function NotFoundPage() {
               gap: '0.75rem'
             }}
           >
-            🏠 Go to Home
+            <Home size={20} style={{ marginRight: '0.5rem' }} /> Go to Home
           </button>
         </div>
 
@@ -216,7 +252,7 @@ function NotFoundPage() {
                 e.currentTarget.style.background = 'var(--bg-secondary)';
               }}
             >
-              🔐 Login
+              <Lock size={16} style={{ marginRight: '0.5rem' }} /> Login
             </button>
             
             <button
@@ -241,7 +277,7 @@ function NotFoundPage() {
                 e.currentTarget.style.background = 'var(--bg-secondary)';
               }}
             >
-              ✨ Sign Up
+              <Sparkles size={16} style={{ marginRight: '0.5rem' }} /> Sign Up
             </button>
           </div>
         </div>
@@ -307,11 +343,12 @@ if (!res.ok) {
     <div className="page">
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <div style={{ 
-          fontSize: '4rem', 
+          display: 'flex',
+          justifyContent: 'center',
           marginBottom: '1rem',
           filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))'
         }}>
-          🎓
+          <GraduationCap size={64} color="#ffffff" />
         </div>
         <h1 className="title" style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: '#ffffff', textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)' }}>
           Welcome Back
@@ -369,7 +406,7 @@ if (!res.ok) {
                 padding: '0.25rem'
               }}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
+              {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
           </div>
 
@@ -389,10 +426,10 @@ if (!res.ok) {
             </a>
           </div>
 
-          {error && <div className="alert alert-error" style={{ marginBottom: '1rem' }}>⚠️ {error}</div>}
+          {error && <div className="alert alert-error" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><AlertTriangle size={18} /> {error}</div>}
 
-          <button className="btn" type="submit" disabled={loading} style={{ width: '100%', fontSize: '1.05rem', padding: '0.875rem' }}>
-            {loading ? '🔄 Signing in...' : '🔐 Sign In'}
+          <button className="btn" type="submit" disabled={loading} style={{ width: '100%', fontSize: '1.05rem', padding: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            {loading ? <><Loader size={18} className="spin" /> Signing in...</> : <><Lock size={18} /> Sign In</>}
           </button>
         </form>
 
@@ -524,11 +561,12 @@ function SignUpPage() {
     <div className="page">
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <div style={{ 
-          fontSize: '4rem', 
+          display: 'flex',
+          justifyContent: 'center',
           marginBottom: '1rem',
           filter: 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))'
         }}>
-          🎓
+          <GraduationCap size={64} color="#ffffff" />
         </div>
         <h1 className="title" style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: '#ffffff', textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)' }}>
           Join EduckPro
@@ -592,9 +630,12 @@ function SignUpPage() {
             color: '#6b7280', 
             marginTop: '-0.5rem',
             marginBottom: '1rem',
-            fontStyle: 'italic'
+            fontStyle: 'italic',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
           }}>
-            ℹ️ Note: Teachers are added by school administrators and assigned to classes
+            <Info size={14} /> Note: Teachers are added by school administrators and assigned to classes
           </p>
 
           <label style={{ marginBottom: '0.5rem', display: 'block', fontWeight: '600' }}>
@@ -629,7 +670,7 @@ function SignUpPage() {
                 padding: '0.25rem'
               }}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'}
+              {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
           </div>
 
@@ -665,14 +706,14 @@ function SignUpPage() {
                 padding: '0.25rem'
               }}
             >
-              {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+              {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
           </div>
 
-          {error && <div className="alert alert-error" style={{ marginBottom: '1rem' }}>⚠️ {error}</div>}
+          {error && <div className="alert alert-error" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}><AlertTriangle size={18} /> {error}</div>}
 
-          <button className="btn" type="submit" disabled={loading} style={{ width: '100%', fontSize: '1.05rem', padding: '0.875rem' }}>
-            {loading ? '🔄 Creating Account...' : '✨ Create Account'}
+          <button className="btn" type="submit" disabled={loading} style={{ width: '100%', fontSize: '1.05rem', padding: '0.875rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            {loading ? <><Loader size={18} className="spin" /> Creating Account...</> : <><Sparkles size={18} /> Create Account</>}
           </button>
         </form>
 
@@ -1832,7 +1873,7 @@ function ParentLayout() {
             animation: 'slideIn 0.3s ease-out',
           }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
-              <div style={{ fontSize: '2rem' }}>💰</div>
+              <div style={{ fontSize: '2rem' }}><DollarSign size={18} /></div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 'bold', fontSize: '1.05rem', color: '#92400e', marginBottom: '0.25rem' }}>
                   New Invoice Created!
@@ -1878,7 +1919,7 @@ function ParentLayout() {
         )}
 
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h2 className="title" style={{ marginBottom: '0.5rem', color: '#ffffff', textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)' }}>👨‍👩‍👧‍👦 Parent Dashboard</h2>
+          <h2 className="title" style={{ marginBottom: '0.5rem', color: '#ffffff', textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}><UsersRound size={32} /> Parent Dashboard</h2>
           <p style={{ color: '#ffffff', fontSize: '0.95rem', textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)' }}>Manage your children, classes and school fees</p>
         </div>
 
@@ -1950,7 +1991,7 @@ function ParentLayout() {
         <>
           {!showStudentForm ? (
             <div className="card" style={{ marginBottom: '1rem', textAlign: 'center', padding: '2rem' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👶</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}><Baby size={48} color="var(--primary-color)" /></div>
               <h3 style={{ marginBottom: '1rem' }}>Add Your Child</h3>
               <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
                 Please provide comprehensive information to help schools process enrollment requests efficiently
@@ -1958,15 +1999,15 @@ function ParentLayout() {
               <button 
                 className="btn" 
                 onClick={() => setShowStudentForm(true)}
-                style={{ padding: '0.75rem 2rem', fontSize: '1.05rem' }}
+                style={{ padding: '0.75rem 2rem', fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
-                ✨ Add a Child
+                <Sparkles size={18} /> Add a Child
               </button>
             </div>
           ) : (
             <div className="card" style={{ marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h3 style={{ margin: 0 }}>{editingStudentId ? '✏️ Edit Child Information' : '➕ Add a Child'}</h3>
+                <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>{editingStudentId ? <><Edit size={20} /> Edit Child Information</> : <><Plus size={20} /> Add a Child</>}</h3>
                 <button 
                   onClick={() => {
                     setShowStudentForm(false);
@@ -2194,7 +2235,7 @@ function ParentLayout() {
                     alignItems: 'center',
                     gap: '0.5rem',
                   }}>
-                    📎 Upload Documents (Optional)
+                    <Paperclip size={20} /> Upload Documents (Optional)
                   </h4>
                   <p style={{ fontSize: '0.8rem', color: '#3b82f6', marginBottom: '1rem' }}>
                     Upload supporting documents to help schools verify your child's information
@@ -4219,18 +4260,25 @@ function AdminLayout() {
         : `${API_URL}/api/fees`;
       const method = editingFeeId ? 'PATCH' : 'POST';
       
+      const payload = {
+        name: feeName,
+        description: feeDescription,
+        amount: Number(feeAmount),
+        currency: feeCurrency,
+      };
+      
+      // Add schoolId when creating new fee
+      if (!editingFeeId && me?.schoolId) {
+        payload.schoolId = me.schoolId;
+      }
+      
       const res = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          name: feeName,
-          description: feeDescription,
-          amount: Number(feeAmount),
-          currency: feeCurrency,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();

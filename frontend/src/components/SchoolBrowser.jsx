@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 import './SchoolBrowser.css';
+import { MapPin, Users, BookOpen, X, AlertTriangle, CheckCircle, Info, Clock, FileText } from 'lucide-react';
 
 function SchoolBrowser({ onSelectSchool, students = [] }) {
   const [schools, setSchools] = useState([]);
@@ -217,8 +218,8 @@ function SchoolBrowser({ onSelectSchool, students = [] }) {
                     {students.length > 0 ? (
                       <EnrollmentSection cls={cls} students={students} schoolName={selectedSchool.name} />
                     ) : (
-                      <div style={{ marginTop: '1rem', padding: '0.75rem', backgroundColor: '#fef3c7', borderRadius: '0.5rem', fontSize: '0.9rem', color: '#92400e' }}>
-                        ⚠️ Please add a child in the Children tab before enrolling in classes.
+                      <div style={{ marginTop: '1rem', padding: '0.75rem', backgroundColor: '#fef3c7', borderRadius: '0.5rem', fontSize: '0.9rem', color: '#92400e', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <AlertTriangle size={18} /> Please add a child in the Children tab before enrolling in classes.
                       </div>
                     )}
                   </div>
@@ -249,7 +250,7 @@ function SchoolBrowser({ onSelectSchool, students = [] }) {
         />
         {searchTerm && (
           <button onClick={() => setSearchTerm('')} className="clear-button">
-            ✕
+            <X size={16} />
           </button>
         )}
       </div>
@@ -281,7 +282,7 @@ function SchoolBrowser({ onSelectSchool, students = [] }) {
               <div className="school-card-body">
                 {(school.address || school.city || school.state || school.country) && (
                   <p className="school-location">
-                    📍 {[school.address, school.city, school.state, school.country]
+                    <MapPin size={16} style={{ marginRight: '0.25rem', display: 'inline' }} /> {[school.address, school.city, school.state, school.country]
                       .filter(Boolean)
                       .join(', ')}
                   </p>
@@ -295,10 +296,10 @@ function SchoolBrowser({ onSelectSchool, students = [] }) {
                 )}
                 <div className="school-stats">
                   <span className="stat">
-                    👥 {school._count?.students || 0} Students
+                    <Users size={16} style={{ marginRight: '0.25rem', display: 'inline' }} /> {school._count?.students || 0} Students
                   </span>
                   <span className="stat">
-                    📚 {school._count?.classes || 0} Classes
+                    <BookOpen size={16} style={{ marginRight: '0.25rem', display: 'inline' }} /> {school._count?.classes || 0} Classes
                   </span>
                 </div>
               </div>
@@ -362,8 +363,8 @@ function EnrollmentSection({ cls, students, schoolName }) {
 
   return (
     <div style={{ marginTop: '1rem', borderTop: '2px solid #e5e7eb', paddingTop: '1rem' }}>
-      <h5 style={{ fontSize: '0.95rem', marginBottom: '0.75rem', color: '#374151' }}>
-        📝 Enroll in this Class
+      <h5 style={{ fontSize: '0.95rem', marginBottom: '0.75rem', color: '#374151', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <FileText size={18} /> Enroll in this Class
       </h5>
       
       <form onSubmit={handleEnroll}>
@@ -421,7 +422,7 @@ function EnrollmentSection({ cls, students, schoolName }) {
             color: '#991b1b',
             fontSize: '0.85rem',
           }}>
-            ⚠️ {error}
+            <AlertTriangle size={18} style={{ marginRight: '0.25rem', display: 'inline' }} /> {error}
           </div>
         )}
 
@@ -435,7 +436,7 @@ function EnrollmentSection({ cls, students, schoolName }) {
             color: '#065f46',
             fontSize: '0.85rem',
           }}>
-            ✅ {success}
+            <CheckCircle size={18} style={{ marginRight: '0.25rem', display: 'inline' }} /> {success}
           </div>
         )}
 
@@ -454,7 +455,7 @@ function EnrollmentSection({ cls, students, schoolName }) {
             cursor: studentId ? 'pointer' : 'not-allowed',
           }}
         >
-          {loading ? '⏳ Submitting...' : '📝 Submit Enrollment Request'}
+          {loading ? <><Clock size={18} style={{ marginRight: '0.25rem', display: 'inline' }} /> Submitting...</> : <><FileText size={18} style={{ marginRight: '0.25rem', display: 'inline' }} /> Submit Enrollment Request</>}
         </button>
       </form>
 
@@ -466,7 +467,7 @@ function EnrollmentSection({ cls, students, schoolName }) {
         fontSize: '0.8rem',
         color: '#1e40af',
       }}>
-        ℹ️ Your enrollment request will be sent to the school admin for approval. Invoices will be created once approved.
+        <Info size={16} style={{ marginRight: '0.25rem', display: 'inline' }} /> Your enrollment request will be sent to the school admin for approval. Invoices will be created once approved.
       </div>
     </div>
   );
