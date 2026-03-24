@@ -1,10 +1,10 @@
 {
   "devDependencies": {
     "nodemon": "^3.1.11",
-    "prisma": "^6.19.1"
+    "prisma": "^6.19.2"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.1",
+    "@prisma/client": "^6.19.2",
     "serve": "^14.2.4"
   }
 }

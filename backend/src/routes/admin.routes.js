@@ -96,6 +96,14 @@ router.get('/teachers', async (req, res, next) => {
 router.post('/teachers', async (req, res, next) => {
   // Ensure role is set to teacher and use admin's schoolId
   req.body.role = 'teacher';
+  
+  // Validate admin has a school assigned
+  if (!req.user.schoolId) {
+    return res.status(403).json({ 
+      error: 'Admin account must be associated with a school to create teachers' 
+    });
+  }
+  
   req.body.schoolId = req.user.schoolId; // Use admin's school
   return ownerController.createUser(req, res, next);
 });

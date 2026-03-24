@@ -29,6 +29,12 @@ router.get('/my-students', teacherController.getMyStudents);
 router.get('/', teacherController.getAllTeachers);
 
 /**
+ * Create teacher (Admin only)
+ * POST /api/teachers
+ */
+router.post('/', teacherController.createTeacher);
+
+/**
  * Assign teacher to a class (Admin only)
  * POST /api/teachers/:teacherId/classes/:classId
  */

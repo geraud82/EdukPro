@@ -289,10 +289,69 @@ const getAllTeachers = asyncHandler(async (req, res) => {
   res.json(teachers);
 });
 
+/**
+ * Create teacher (Admin only)
+ * POST /api/teachers
+ */
+const createTeacher = asyncHandler(async (req, res) => {
+  if (req.user.role !== 'admin' && req.user.role !== 'owner') {
+    throw new ApiError(403, 'Access denied');
+  }
+
+  const { name, email, password } = req.body;
+
+  // Validation
+  if (!name || !email || !password) {
+    throw new ApiError(400, 'Missing required fields: name, email, password');
+  }
+
+  // Validate admin has a school assigned
+  if (req.user.role === 'admin' && !req.user.schoolId) {
+    throw new ApiError(403, 'Admin account must be associated with a school to create teachers');
+  }
+
+  // Check if email exists
+  const exists = await prisma.user.findUnique({ where: { email } });
+  if (exists) {
+    throw new ApiError(409, 'Email already registered');
+  }
+
+  // Hash password
+  const bcrypt = require('bcryptjs');
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  // Create teacher with admin's school
+  const teacher = await prisma.user.create({
+    data: {
+      name,
+      email,
+      passwordHash,
+      role: 'teacher',
+      schoolId: req.user.role === 'admin' ? req.user.schoolId : (req.body.schoolId ? Number(req.body.schoolId) : null),
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isActive: true,
+      schoolId: true,
+      school: { select: { id: true, name: true } },
+      createdAt: true,
+    },
+  });
+
+  res.status(201).json({
+    message: 'Teacher created successfully',
+    teacher,
+  });
+});
+
 module.exports = {
   getMyClasses,
   getMyStudents,
   assignToClass,
   removeFromClass,
   getAllTeachers,
+  createTeacher,
 };
